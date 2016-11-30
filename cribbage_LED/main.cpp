@@ -1,8 +1,6 @@
 #include <msp430.h> 
 #include "cribbage_LED.h"
-/*
- * main.c
- */
+
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	
