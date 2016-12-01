@@ -7,8 +7,7 @@ main.obj: /Applications/ti/ccsv6/ccs_base/msp430/include/in430.h
 main.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics.h
 main.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h
 main.obj: ../cribbage_LED.h
-main.obj: ../gameframe.h
-main.obj: ../crib_globals.h
+main.obj: ../inputHandler.h
 
 ../main.cpp: 
 /Applications/ti/ccsv6/ccs_base/msp430/include/msp430.h: 
@@ -17,5 +16,4 @@ main.obj: ../crib_globals.h
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h: 
 ../cribbage_LED.h: 
-../gameframe.h: 
-../crib_globals.h: 
+../inputHandler.h: 

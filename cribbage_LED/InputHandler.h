@@ -4,21 +4,18 @@
 class InputPin
 {
 public:
-	InputPin(unsigned bank, unsigned pin, unsigned debounceSamps) :
-		bank(bank), pin(pin), debounceSamps(debounceSamps) {}
+	InputPin(unsigned bank, unsigned pin, unsigned debounceSamps,
+			unsigned holdRepeat) :
+		bank(bank), pin(pin), debounceSamps(debounceSamps),
+		holdRepeat(holdRepeat) {};
 	bool read();
 private:
 	void debounce();
 	unsigned debounceSamps;
 	unsigned bank;
 	unsigned pin;
-};
-class InputHandler
-{
-public:
-	virtual void update();
-private:
-
+	unsigned state;
+	unsigned holdRepeat;
 };
 
 #endif

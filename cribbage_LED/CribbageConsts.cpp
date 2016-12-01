@@ -5,7 +5,7 @@ namespace Cribbage
 	// bank == I2C address
 	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::anodes[UI::DisplayDriver::numAnodes] =
 	{
-	//		BANK	CH
+	//		BANK		CH
 			{0,		0},	// anode 0
 			{0,		1},	// anode 1
 			{0,		2},	// anode 2
@@ -36,7 +36,7 @@ namespace Cribbage
 
 	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::cathodes[UI::DisplayDriver::numCathodes] =
 	{
-	//		BANK	CH
+	//		BANK		CH
 			{0,		3},	// cathode 0
 			{0,		2},	// cathode 1
 			{0,		1},	// cathode 2

@@ -1,7 +1,6 @@
 #include "cribbage_LED.h"
 #include <cassert>
 
-
 const int Cribbage::UI::playerOffset[MAX_PLAYERS] = {0, 120, 240, 360};
 
 Cribbage::DisplayDriver::DisplayDriver()
@@ -26,29 +25,27 @@ void Cribbage::DisplayDriver::set(unsigned LED)
 void Cribbage::DisplayDriver::ctrl(unsigned LED, bool on)
 {
 	assert(LED<numLEDs);
-	this->LEDStates[LED] = on;
+	LEDStates[LED] = on;
 }
 void Cribbage::DisplayDriver::enable()
 {
-	this->enabled = true;
+	enabled = true;
 }
 void Cribbage::DisplayDriver::disable()
 {
-	this->enabled = false;
+	enabled = false;
 }
-
+void Cribbage::Init::showEnabled(unsigned pNum, Controller& ctrlr)
+{
+	ctrlr.ui.setPlayer(pNum);
+	ctrlr.ui.setCurrScore(1);
+}
+void Cribbage::Init::enter(Controller& ctrlr)
+{
+	// set minimum number of players
+	for(int plr=0; plr<MIN_PLAYERS; plr++) showEnabled(plr, ctrlr);
+}
 Cribbage::Controller::Controller()
 {
-
-}
-void Cribbage::Controller::init()
-{
-	ui.clear();
-	for(unsigned plr = 0; plr < MIN_PLAYERS; plr++)
-	{
-		// light up the minimum number of players
-		ui.setPlayer(plr);
-		ui.setCurrScore(1);
-	}
-
+	numPlayersChosen = 0;
 }
