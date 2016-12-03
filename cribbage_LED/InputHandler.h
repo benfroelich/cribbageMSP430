@@ -11,11 +11,13 @@ public:
 	bool read();
 private:
 	void debounce();
-	unsigned debounceSamps;
+	bool polarity;				// active high or active low?
+	unsigned debounceSamps;		// number of samples to debounce for
+	unsigned counts;			// number of continuous samples in active state
 	unsigned bank;
 	unsigned pin;
-	unsigned state;
-	unsigned holdRepeat;
+	unsigned state;				// on(1) or off(0)
+	unsigned holdRepeat;		// how many more samples before incrementing again
 };
 
 #endif

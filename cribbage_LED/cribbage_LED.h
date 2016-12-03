@@ -44,7 +44,7 @@ namespace Cribbage
 	{
 	public:
 		virtual void enter(Controller& ctrlr);
-		virtual void handleInput(Controller& ctrlr);
+		virtual State* handleInput(Controller& ctrlr);
 		virtual void update(Controller& ctrlr);
 	};
 	// input pins (just placeholders for now)
@@ -96,21 +96,35 @@ namespace Cribbage
 	{
 	public:
 		virtual void enter(Controller& ctrlr);
-		virtual void handleInput(Controller& ctrlr);
+		virtual State* handleInput(Controller& ctrlr);
 		virtual void update(Controller& ctrlr);
-		void showEnabled(unsigned pNum, Controller& ctrlr);
+	private:
+		void showEnabled(unsigned pNum, bool on, Controller& ctrlr);
+	};
+	class Turns: public State
+	{
+	public:
+		// called only upon initial entry into state from another state
+		virtual void enter(Controller& ctrlr);
+		virtual State* handleInput(Controller& ctrlr);
+		virtual void update(Controller& ctrlr);
 	};
 	class Controller
 	{
 	public:
 		Controller();
+		void run();	// run a pass of the state machine
 		virtual void enter();
+		// figure out what the next state will be
 		virtual void handleInput();
+		// update the state object and the controller
 		virtual void update();
 	//private:
 		// individual player registry
 		Player players[MAX_PLAYERS];
-		State *currState;
+		State *currState, *prevState, *nextState;
+		Init init;	// initialization state declaration
+		Turns turns; 	// turn state declaration
 		UI ui;
 		unsigned numPlayersChosen;
 	};

@@ -35,17 +35,75 @@ void Cribbage::DisplayDriver::disable()
 {
 	enabled = false;
 }
-void Cribbage::Init::showEnabled(unsigned pNum, Controller& ctrlr)
+void Cribbage::Init::showEnabled(unsigned pNum, bool on, Controller& ctrlr)
 {
 	ctrlr.ui.setPlayer(pNum);
-	ctrlr.ui.setCurrScore(1);
+	ctrlr.ui.setCurrScore(on);
 }
 void Cribbage::Init::enter(Controller& ctrlr)
 {
 	// set minimum number of players
-	for(int plr=0; plr<MIN_PLAYERS; plr++) showEnabled(plr, ctrlr);
+	for(int plr=0; plr<MIN_PLAYERS; plr++) showEnabled(plr, true, ctrlr);
+}
+Cribbage::State* Cribbage::Init::handleInput(Controller & ctrlr)
+{
+	State * nextState = &ctrlr.init;
+	// increment num players if UP or RIGHT pressed
+	if(UP.read() || RIGHT.read())
+	{
+		if(ctrlr.numPlayersChosen < MAX_PLAYERS)
+			ctrlr.numPlayersChosen++;
+	}
+	// decrement num players if DOWN or LEFT
+	else if(DOWN.read() || LEFT.read() || BACK.read())
+	{
+		if(ctrlr.numPlayersChosen > MIN_PLAYERS)
+			ctrlr.numPlayersChosen--;
+	}
+	// let's start the game!
+	else if(ENTER.read())
+	{
+		// clear display
+		for(int plr=0; plr<MAX_PLAYERS; plr++) showEnabled(plr, false, ctrlr);
+		nextState = &ctrlr.turns;
+	}
+	return nextState;
+}
+void Cribbage::Init::update(Controller& ctrlr)
+{
+	for(unsigned plr; plr<MAX_PLAYERS; plr++)
+	{
+		showEnabled(plr, plr <= ctrlr.numPlayersChosen, ctrlr);
+	}
 }
 Cribbage::Controller::Controller()
 {
-	numPlayersChosen = 0;
+	numPlayersChosen = MIN_PLAYERS;
+	currState = &init;
+	prevState = nextState = 0;
+}
+void Cribbage::Controller::run()
+{
+	assert(currState);
+	enter();
+	handleInput();
+	update();
+	// update states
+	prevState = currState;
+	currState = nextState;
+	nextState = 0;	// current state must update next state or else!!!
+}
+void Cribbage::Controller::enter()
+{
+	// only run the enter code if this is the first time thru
+	if(currState != prevState && currState)
+		currState->enter(*this);
+}
+void Cribbage::Controller::handleInput()
+{
+	nextState = currState->handleInput(*this);
+}
+void Cribbage::Controller::update()
+{
+	currState->update(*this);
 }

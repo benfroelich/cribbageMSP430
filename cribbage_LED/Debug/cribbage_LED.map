@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker Unix v15.12.3                  
 ******************************************************************************
->> Linked Thu Dec  1 00:29:18 2016
+>> Linked Fri Dec  2 22:56:48 2016
 
 OUTPUT FILE NAME:   <cribbage_LED.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_noexit_mpu"  address: 00004800
