@@ -3,7 +3,6 @@
 #ifndef CRIBBAGE_LED_H
 #define CRIBBAGE_LED_H
 #include "inputHandler.h"
-#include <msp430.h>
 
 namespace Cribbage
 {
@@ -48,12 +47,7 @@ namespace Cribbage
 		virtual void update(Controller& ctrlr);
 	};
 	// input pins (just placeholders for now)
-	extern InputPin UP, DOWN, LEFT, RIGHT, BACK, ENTER;
-	class InputHandler // TODO: : public IO
-	{
-	public:
-//		typedef enum Input_t {UP, DOWN, RIGHT, LEFT, BACK, ENTER} Input_t;
-	};
+	extern IO::InputPin UP, DOWN, LEFT, RIGHT, BACK, ENTER;
 	class DisplayDriver
 	{
 	public:

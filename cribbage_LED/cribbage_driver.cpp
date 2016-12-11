@@ -71,7 +71,7 @@ Cribbage::State* Cribbage::Init::handleInput(Controller & ctrlr)
 }
 void Cribbage::Init::update(Controller& ctrlr)
 {
-	for(unsigned plr; plr<MAX_PLAYERS; plr++)
+	for(unsigned plr=0; plr<MAX_PLAYERS; plr++)
 	{
 		showEnabled(plr, plr <= ctrlr.numPlayersChosen, ctrlr);
 	}
