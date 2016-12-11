@@ -16,7 +16,7 @@ IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity,
 	holdRepeat(holdRepeat),
 	debounceSamps(debounceSamps),
 	counts(0),		// init samp cnt
-	level(2),		// invalid state
+	state(2),		// invalid state
 	pu(pull)
 {
 	assert(port<=NUM_PORTS && port>0);
@@ -47,7 +47,7 @@ void IO::InputPin::init()
 	// initialize state to off/inactive
 	debouncedState = state = false;
 }
-void IO::inputPin::debounce()
+void IO::InputPin::debounce()
 {
 	// read the current value on the pin and convert from a
 	// level (1/0) to a state (on/off or active/inactive)

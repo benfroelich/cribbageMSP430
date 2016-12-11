@@ -20,10 +20,8 @@ int main(void) {
 	BACK.init();
 	ENTER.init();
 
-	while(1)
-	{
-
-	}
+	Cribbage::Controller game;
+	game.run();
 	return 0;
 }
 

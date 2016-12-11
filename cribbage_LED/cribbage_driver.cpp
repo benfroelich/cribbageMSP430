@@ -35,6 +35,20 @@ void Cribbage::DisplayDriver::disable()
 {
 	enabled = false;
 }
+Cribbage::UI::UI()
+{
+	this->pNum = 0;
+	this->clear();
+	this->disable();
+}
+void Cribbage::UI::setPlayer(unsigned int pNum)
+{
+	this->pNum = pNum;
+}
+void Cribbage::UI::setCurrScore(unsigned score)
+{
+	set(playerOffset[pNum] + score);
+}
 void Cribbage::Init::showEnabled(unsigned pNum, bool on, Controller& ctrlr)
 {
 	ctrlr.ui.setPlayer(pNum);

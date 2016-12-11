@@ -48,6 +48,11 @@ namespace Cribbage
 	};
 	// input pins (just placeholders for now)
 	extern IO::InputPin UP, DOWN, LEFT, RIGHT, BACK, ENTER;
+	class InputHandler // TODO: : public IO
+	{
+	public:
+//		typedef enum Input_t {UP, DOWN, RIGHT, LEFT, BACK, ENTER} Input_t;
+	};
 	class DisplayDriver
 	{
 	public:
