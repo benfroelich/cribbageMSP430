@@ -15,10 +15,11 @@ namespace Cribbage
 	{
 	public:
 		Player();
-		Player* next();
+		//Player* next();
 	private:
 		unsigned score;	// player's current score
 		char pNum;	// unique player ID number
+		static char numPlayers;
 	};
 
 	class Turn
@@ -42,12 +43,17 @@ namespace Cribbage
 	class State
 	{
 	public:
-		virtual void enter(Controller& ctrlr);
-		virtual State* handleInput(Controller& ctrlr);
-		virtual void update(Controller& ctrlr);
+		virtual void enter(Controller& ctrlr)=0;
+		virtual State* handleInput(Controller& ctrlr)=0;
+		virtual void update(Controller& ctrlr)=0;
 	};
-	// input pins (just placeholders for now)
-	extern IO::InputPin UP, DOWN, LEFT, RIGHT, BACK, ENTER;
+	// input pin access, defined in user main
+	IO::InputPin * UP;
+	IO::InputPin * DOWN;
+	IO::InputPin * LEFT;
+	IO::InputPin * RIGHT;
+	IO::InputPin * BACK;
+	IO::InputPin * ENTER;
 	class InputHandler // TODO: : public IO
 	{
 	public:
@@ -120,8 +126,9 @@ namespace Cribbage
 		virtual void update();
 	//private:
 		// individual player registry
-		Player players[MAX_PLAYERS];
+		Player * players[MAX_PLAYERS];
 		State *currState, *prevState, *nextState;
+		// single states for pointers
 		Init init;	// initialization state declaration
 		Turns turns; 	// turn state declaration
 		UI ui;

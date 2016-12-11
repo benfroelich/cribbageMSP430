@@ -3,10 +3,10 @@
 #include "InputHandler.h"
 
 IO::PORTS_T IO::PORTS[4] = {
-		{&P1SEL0, &P1IN, &P1DIR},
-		{&P1SEL0, &P1IN, &P1DIR},
-		{&P1SEL0, &P1IN, &P1DIR},
-		{&P1SEL0, &P1IN, &P1DIR} };
+		{&P1SEL0, &P1REN, &P1IN, &P1DIR, &P1OUT},
+		{&P2SEL0, &P2REN, &P2IN, &P2DIR, &P2OUT},
+		{&P3SEL0, &P3REN, &P3IN, &P3DIR, &P3OUT},
+		{&P4SEL0, &P4REN, &P4IN, &P4DIR, &P4OUT} };
 
 IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity,
 	PULLUP pull, unsigned debounceSamps, unsigned holdRepeat) :
@@ -26,15 +26,15 @@ IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity,
 void IO::InputPin::init()
 {
 	// disable any special function on the pin
-	*reg->sel &= ~bm;
+	*(reg->sel) &= ~bm;
 	// set direction to input
-	*reg->dir &= ~bm;
+	*(reg->dir) &= ~bm;
 	// set pullup
 	switch(pu)
 	{
 	case UP:
-		*reg->ren |= bm;
-		*reg->out |= bm;
+		*(reg->ren) |= bm;
+		*(reg->out) |= bm;
 		break;
 	case DOWN:
 		*reg->ren |= bm;

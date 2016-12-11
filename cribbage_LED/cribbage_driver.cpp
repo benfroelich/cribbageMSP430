@@ -1,8 +1,16 @@
 #include "cribbage_LED.h"
 #include <cassert>
 
-const int Cribbage::UI::playerOffset[MAX_PLAYERS] = {0, 120, 240, 360};
-
+const int Cribbage::UI::playerOffset[Cribbage::MAX_PLAYERS] =
+	{0, 120, 240, 360};
+char Cribbage::Player::numPlayers = 0;
+Cribbage::Player players_g[Cribbage::MAX_PLAYERS];
+Cribbage::Player::Player()
+{
+	this->score = 0;
+	// set player ID to static player count and increment player count
+	this->pNum = numPlayers++;
+}
 Cribbage::DisplayDriver::DisplayDriver()
 {
 	// set up variables
@@ -63,19 +71,19 @@ Cribbage::State* Cribbage::Init::handleInput(Controller & ctrlr)
 {
 	State * nextState = &ctrlr.init;
 	// increment num players if UP or RIGHT pressed
-	if(UP.read() || RIGHT.read())
+	if(UP->read() || RIGHT->read())
 	{
 		if(ctrlr.numPlayersChosen < MAX_PLAYERS)
 			ctrlr.numPlayersChosen++;
 	}
 	// decrement num players if DOWN or LEFT
-	else if(DOWN.read() || LEFT.read() || BACK.read())
+	else if(DOWN->read() || LEFT->read() || BACK->read())
 	{
 		if(ctrlr.numPlayersChosen > MIN_PLAYERS)
 			ctrlr.numPlayersChosen--;
 	}
 	// let's start the game!
-	else if(ENTER.read())
+	else if(ENTER->read())
 	{
 		// clear display
 		for(int plr=0; plr<MAX_PLAYERS; plr++) showEnabled(plr, false, ctrlr);
@@ -95,6 +103,11 @@ Cribbage::Controller::Controller()
 	numPlayersChosen = MIN_PLAYERS;
 	currState = &init;
 	prevState = nextState = 0;
+	// assign the class's player pointers to the global player array
+	for(int plr=0; plr < MAX_PLAYERS; plr++)
+	{
+		this->players[plr] = &players_g[plr];
+	}
 }
 void Cribbage::Controller::run()
 {
@@ -121,3 +134,23 @@ void Cribbage::Controller::update()
 {
 	currState->update(*this);
 }
+void Cribbage::Turns::enter(Controller& ctrlr)
+{
+	// errrrm do nothing fer now
+}
+Cribbage::State *Cribbage::Turns::handleInput(Controller& ctrlr)
+{
+	return &ctrlr.turns;
+}
+void Cribbage::Turns::update(Controller& ctrlr)
+{
+
+}
+
+
+
+
+
+
+
+
