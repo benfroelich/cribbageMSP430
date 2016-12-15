@@ -2,12 +2,12 @@
 #include "cribbage_LED.h"
 
 IO::InputPin
-		UP		(1, 1, 0, IO::UP, 64, 1024),
-		DOWN	(4, 5, 0, IO::UP, 64, 1024),
-		RIGHT	(1, 2, 0, IO::UP, 64, 1024),
-		LEFT	(1, 3, 0, IO::UP, 64, 1024),
-		BACK	(1, 4, 0, IO::UP, 64, 4096),
-		ENTER	(1, 5, 0, IO::UP, 64, 1024);
+		UP		(1, 1, 0, IO::PULLUP::UP, 4, 1024),
+		DOWN	(4, 5, 0, IO::PULLUP::UP, 4, 1024),
+		RIGHT	(1, 2, 0, IO::PULLUP::UP, 4, 1024),
+		LEFT	(1, 3, 0, IO::PULLUP::UP, 4, 1024),
+		BACK	(1, 4, 0, IO::PULLUP::UP, 4, 4096),
+		ENTER	(1, 5, 0, IO::PULLUP::UP, 4, 1024);
 
 int main(void) {
 	// link the IO pins we defined above to the library
