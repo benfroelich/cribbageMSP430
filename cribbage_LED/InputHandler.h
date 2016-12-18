@@ -7,7 +7,8 @@ namespace IO
 	// define the a type for a pointer to an IO control register
 	typedef volatile unsigned char *const IO_REG;
 	// pin history data type used to store pin level for debouncing
-	typedef unsigned pinHist_t;
+	//typedef unsigned pinHist_t;
+	typedef unsigned char pinHist_t;
 	struct PORTS_T
 	{
 		IO_REG sel, ren, in, dir, out;

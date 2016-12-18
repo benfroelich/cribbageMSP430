@@ -16,21 +16,27 @@ IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity,
 	holdRepeat(holdRepeat),
 	counts(0),		// init samp cnt
 	state(PINSTATE::OFF),		// invalid state
-	pu(pull)
+	pu(pull),
+	dbncState(IO::PINSTATE::OFF),
+	pinHist(0x0000)
 {
 	assert(port<=NUM_PORTS && port>0);
 	reg = &PORTS[port-1];
 	bm = 1<<pin;
 	// fill every bit of the debounce mask with
 	// a pattern to match the history of the pin with
-	// e.g. activeSamps == 3 -> dbncPtrn = 0b00000111
-	for(unsigned i=0; i<sizeof(dbncPtrn)*8; i++)
+	// e.g. activeSamps == 3 -> dbncPtrn == 0b0000000000000111
+	bool lvl;
+	for(int i = sizeof(pinHist_t)*8; i>=0; i--)
 	{
-		bool lvl = polarity && (i > activeSamps);
-		// stuff the bit into the debouncePattern
-		dbncPtrn |= lvl;
-		// and shift everything over once
+		// level is XOR of polarity and active samples
+		lvl = polarity != (i >= activeSamps);
+		// shift everything over once
 		dbncPtrn = dbncPtrn << 1;
+		// and stuff the bit into the debouncePattern
+		dbncPtrn |= lvl;
+		// also avoid false triggers by setting the pinHist to all off
+		pinHist |= pinHist << 1 | !polarity;
 	}
 };
 void IO::InputPin::init()
@@ -59,11 +65,10 @@ void IO::InputPin::init()
 }
 void IO::InputPin::debounce()
 {
-	// read the current value on the pin and convert from a
-	// level (1/0) to a state (on/off or active/inactive)
-	bool newState = *reg->in & bm ? polarity : !polarity;
+	// read the current pin level (1/0)
+	bool newLvl = *reg->in & bm ? true : false;
 	// store the state read
-	pinHist = newState | (pinHist << 1);
+	pinHist = newLvl | (pinHist << 1);
 	if(!checkForTransition()) checkForRepeat();
 }
 bool IO::InputPin::checkForTransition()
@@ -74,20 +79,42 @@ bool IO::InputPin::checkForTransition()
 		state = dbncState = PINSTATE::ON;
 		return true;
 	}
+	// check for inverse of pattern (button released)
+	else if(pinHist == (pinHist_t)~dbncPtrn)
+	{
+		state = dbncState = PINSTATE::OFF;
+		return true;
+	}
 	return false;
 }
 bool IO::InputPin::checkForRepeat()
 {
 	// if the state is still active (ON/REPEAT), increment the counter
 	if(state) counts++;
-	else return false;
+	else
+	{
+		if(counts > 1)
+			counts--;
+		return false;
+	}
 	// if the count is high enough, set the debouncedState to true again
 	// this allows checking for held presses
+	// for the first press, wait until holdRepeat == counts
 	if(counts == holdRepeat)
 	{
 		state = dbncState = PINSTATE::REPEAT;
-		holdRepeat = 0;
+		counts = 0;
 		return true;
+	}
+	if(counts == holdRepeat>>2)
+	{
+		// if we've already entered the REPEAT state, flag repeat at 8x the repeatCount speed
+		if(state == PINSTATE::REPEAT)
+		{
+			state = dbncState = PINSTATE::REPEAT;
+			counts = 0;
+			return true;
+		}
 	}
 	// no repeat detected?
 	return false;
