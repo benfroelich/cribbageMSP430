@@ -23,30 +23,32 @@ namespace IO
 	{
 		enum PINSTATE {OFF=0, ON, REPEAT};
 	}
+	// this class configures and debounces input pins
 	class InputPin
 	{
 	public:
 		InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLUP pull,
-				unsigned activeSamps, unsigned holdRepeat);
+				double tOn_ms, double tOff_ms, double tRepeat_ms, double tInt_ms);
+		// no timing setup, moved to init
+		InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLUP pull);
 		// call in the setup routine
 		void init();
+		void init(double tOn_ms, double tOff_ms, double tRepeat_ms, double tInt_ms);
 		// return the current debounced state of the pin
 		PINSTATE::PINSTATE read();
-		PORTS_T *reg;
+		PORTS_T *reg;	// MSP specific, maybe move to a inheriting class?
 		int bm;	// bitmask for the pin == 1<<pin
 		// exit LMP when button press received
-		bool exitLPMOnPress(bool enable = true);
-		void setHoldRepeat(unsigned holdRepeat)
-			{this->holdRepeat = holdRepeat; counts = 0;};
+		bool exitLPMOnPress(bool enable = true);	// TODO: implement
 		// call in the timer ISR
 		void debounce();
 	private:
-		bool checkForRepeat();		// check to see if the pin has been held
-		bool checkForTransition();	// check for a transition on the pin
+		void evaluate();			// evaluate the newly read state
 		bool polarity;				// active high or active low?
-		pinHist_t dbncPtrn;			// pattern to match for a transition detection
-		pinHist_t pinHist;			// bitwise pin samples
-		unsigned counts;			// number of continuous samples in active state
+		//	levels will be counted to to trigger an a state change
+		unsigned onCnt, offCnt, repCnt;
+		unsigned dbncCnts, repCnts;			// number of the same samples in active state
+		bool immState;				// non-debounced pin state read in interrupt
 		unsigned port;				// port
 		unsigned pin;				// pin of port
 		// internal pin state
