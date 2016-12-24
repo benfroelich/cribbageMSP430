@@ -21,24 +21,21 @@ void setUpTimers(const double F_CLK);
 //void setUpPins(const double F_PIN_INTERRUPT);
 void setUpPins();
 
-int _system_pre_init(void)
-{
-  WDTCTL = WDTPW | WDTHOLD;
-  return 1;
-}
-
+// used by setUpPins()... for some reason I cannot define this
+// in the function body :/
+double t_int_ms = 1.0 / (double)F_PIN_INTERRUPT * 1000.0;
 
 int main(void) {
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	//const double F_MCLK = 8e6;			// desired MCLK frequency [Hz]
 
 
+	// unlock clock system (CS)
+	CSCTL0 = CSKEY;
 	// set MCLK frequency to 8MHz (DCOFSEL = "110b = If DCORSEL = 0")
 	CSCTL1 |= DCOFSEL2_L | DCOFSEL1_L;
 	// VLO -> ACLK, DCO -> MCLK,
 	CSCTL2 |= SELA__VLOCLK | SELM__DCOCLK;
-
-
 
 	// clear lock on port settings
     PM5CTL0 &= ~LOCKLPM5;
@@ -52,7 +49,7 @@ int main(void) {
 	__enable_interrupt();
 	while(1)
 	{
-		//_delay_cycles(1000);
+		_delay_cycles(1000);
 		if(UP.read())
 		{
 			P1OUT ^= BIT0;
@@ -61,7 +58,7 @@ int main(void) {
 		{
 			P4OUT ^= BIT6;
 		}
-		_BIS_SR(LPM3_bits + GIE);	// enter LPM3
+		_BIS_SR(LPM3_bits);	// enter LPM3
 	}
 //	Cribbage::Controller game;
 //	game.run();
@@ -69,9 +66,11 @@ int main(void) {
 }
 
 //void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
-void setUpTimers(double F_CLK)
+void setUpTimers(const double F_CLK)
 {
 	TA0CCR0 = F_CLK/8/F_PIN_INTERRUPT;
+	TA0CCR1 = 0xFFFF;
+	TA0CCR2 = 0xFFFF;
 	// SMCLK, /8, count to CCR0, enable interrupts
 	TA0CTL = TASSEL__ACLK | ID_3 | MC__UP | TAIE;
 	// enable interrupt for TA0 CCR0
@@ -80,6 +79,8 @@ void setUpTimers(double F_CLK)
 //void setUpPins(const double F_PIN_INTERRUPT)
 void setUpPins()
 {
+	// why doesn't this work????
+
 	// connect the pins declared to the library,
 	// this allows the cribbage board to use the
 	// input pin pointers that it declares
@@ -89,22 +90,33 @@ void setUpPins()
 	Cribbage::LEFT = &LEFT;
 	Cribbage::BACK = &BACK;
 	Cribbage::ENTER = &ENTER;
+
 	// initialize the input pins
-    UP.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
-	DOWN.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
-	RIGHT.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
-	LEFT.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
-	BACK.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
-	ENTER.init(25.0, 3.0, 100.0, 1/F_PIN_INTERRUPT*1000);
+	UP.init(25.0, 3.0, 100.0, t_int_ms);
+	DOWN.init(25.0, 3.0, 100.0, t_int_ms);
+	RIGHT.init(25.0, 3.0, 100.0, t_int_ms);
+	LEFT.init(25.0, 3.0, 100.0, t_int_ms);
+	BACK.init(25.0, 3.0, 100.0, t_int_ms);
+	ENTER.init(25.0, 3.0, 100.0, t_int_ms);
 #ifdef LAUNCHPAD
     // these pins are for debugging on the launchpad only
 	P1DIR |= BIT0;
 	P4DIR |= BIT6;
 #endif
 }
+
+// disable WDT before any initialization takes place to prevent
+// WDT reset during initialization of memory
+int _system_pre_init(void)
+{
+  WDTCTL = WDTPW | WDTHOLD;
+  return 1;
+}
+
 // ISR's
 // Timer A0 interrupt service routine
 #pragma vector=TIMER0_A0_VECTOR
+#pragma vector=TIMER0_A1_VECTOR
 __interrupt void Timer_A (void)
 {
 	// check for debounce interrupt TA0IV;
