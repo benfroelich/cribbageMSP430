@@ -1,5 +1,10 @@
+#include "msp430.h"
+#include "InputHandler.h"
+#include "USCII2C.h"
 #include "cribbage_LED.h"
 #include <cassert>
+
+IO::USCI_I2C IO::i2c;
 
 const int Cribbage::UI::playerOffset[Cribbage::MAX_PLAYERS] =
 	{0, 120, 240, 360};
@@ -11,11 +16,15 @@ Cribbage::Player::Player()
 	// set player ID to static player count and increment player count
 	this->pNum = numPlayers++;
 }
-Cribbage::DisplayDriver::DisplayDriver()
+Cribbage::DisplayDriver::DisplayDriver() : F_I2C(100e3)
 {
 	// set up variables
 	clear();
 	disable();
+}
+void Cribbage::DisplayDriver::setupHW(double F_MCLK)
+{
+	IO::i2c.init(F_MCLK, 100e3, 0x40);
 }
 void Cribbage::DisplayDriver::clear()
 {
@@ -108,6 +117,11 @@ Cribbage::Controller::Controller()
 	{
 		this->players[plr] = &players_g[plr];
 	}
+}
+void Cribbage::Controller::sysInit(double F_MCLK)
+{
+	// initialize the driver HW resources
+	ui.setupHW(F_MCLK);
 }
 void Cribbage::Controller::run()
 {

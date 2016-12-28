@@ -1,11 +1,11 @@
 #include <msp430.h> 
 #include <intrinsics.h>
+#include "InputHandler.h"
 #include "cribbage_LED.h"
 // switch to turn off use of features on the launchpad
 // E.g. LED's and buttons on the launchpad
 #define LAUNCHPAD
-#define F_PIN_INTERRUPT 500 // pin interrupt frequency [Hz]
-#define F_ACLK 10e3
+
 IO::InputPin
 		UP		(1, 1, 0, IO::PULLUP::UP),
 		DOWN	(4, 5, 0, IO::PULLUP::UP),
@@ -15,20 +15,17 @@ IO::InputPin
 		ENTER	(1, 5, 0, IO::PULLUP::UP);
 
 // local function declarations
-// setup timers
-//void setUpTimers(const double F_CLK, const double F_PIN_INTERRUPT);
-void setUpTimers(const double F_CLK);
-//void setUpPins(const double F_PIN_INTERRUPT);
-void setUpPins();
+void setUpTimers(const double F_CLK, const double F_PIN_INTERRUPT);
+void setUpPins(const double F_PIN_INTERRUPT);
 
-// used by setUpPins()... for some reason I cannot define this
-// in the function body :/
-double t_int_ms = 1.0 / (double)F_PIN_INTERRUPT * 1000.0;
+int main(void)
+{
+	Cribbage::Controller game;
+	const unsigned F_PIN_INTERRUPT = 500; // pin interrupt frequency [Hz]
+	const unsigned F_ACLK = 10e3;
+	const double F_MCLK = 8e6;			// desired MCLK frequency [Hz]
 
-int main(void) {
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
-	//const double F_MCLK = 8e6;			// desired MCLK frequency [Hz]
-
 
 	// unlock clock system (CS)
 	CSCTL0 = CSKEY;
@@ -37,18 +34,18 @@ int main(void) {
 	// VLO -> ACLK, DCO -> MCLK,
 	CSCTL2 |= SELA__VLOCLK | SELM__DCOCLK;
 
+    // setup timers for input debouncing
+    setUpTimers(F_ACLK, F_PIN_INTERRUPT);
+    // init inputs
+    setUpPins(F_PIN_INTERRUPT);
+    game.sysInit(F_MCLK);
 	// clear lock on port settings
     PM5CTL0 &= ~LOCKLPM5;
-    // setup timers for input debouncing
-//    setUpTimers(F_ACLK, F_PIN_INTERRUPT);
-    setUpTimers(F_ACLK);
-    // init inputs
-//    setUpPins(F_PIN_INTERRUPT);
-    setUpPins();
 
 	__enable_interrupt();
 	while(1)
 	{
+		UCB0CTLW0 |= UCTR | UCTXSTT;
 		_delay_cycles(1000);
 		if(UP.read())
 		{
@@ -58,15 +55,18 @@ int main(void) {
 		{
 			P4OUT ^= BIT6;
 		}
-		_BIS_SR(LPM3_bits);	// enter LPM3
+		// dummy i2c transmission
+		UCB0TXBUF = 0x77; // send 077h
+
+		_BIS_SR(LPM0_bits);	// enter LPM0
 	}
-//	Cribbage::Controller game;
+
 //	game.run();
 	return 0;
 }
 
-//void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
-void setUpTimers(const double F_CLK)
+void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
+//void setUpTimers(const double F_CLK)
 {
 	TA0CCR0 = F_CLK/8/F_PIN_INTERRUPT;
 	TA0CCR1 = 0xFFFF;
@@ -76,14 +76,13 @@ void setUpTimers(const double F_CLK)
 	// enable interrupt for TA0 CCR0
 	TA0CCTL0 = CCIE;
 }
-//void setUpPins(const double F_PIN_INTERRUPT)
-void setUpPins()
+void setUpPins(const double F_PIN_INTERRUPT)
+//void setUpPins()
 {
-	// why doesn't this work????
-
-	// connect the pins declared to the library,
-	// this allows the cribbage board to use the
-	// input pin pointers that it declares
+	double t_int_ms = 1.0 / (double)F_PIN_INTERRUPT * 1000.0;
+	// link the pins defined here to cribbage library,
+	// this allows the cribbage board to use the pins
+	// for game control :)
 	Cribbage::UP = &UP;
 	Cribbage::DOWN = &DOWN;
 	Cribbage::RIGHT = &RIGHT;
@@ -116,7 +115,7 @@ int _system_pre_init(void)
 // ISR's
 // Timer A0 interrupt service routine
 #pragma vector=TIMER0_A0_VECTOR
-#pragma vector=TIMER0_A1_VECTOR
+#pragma vector=TIMER0_A1_VECTOR	// why do I need this???
 __interrupt void Timer_A (void)
 {
 	// check for debounce interrupt TA0IV;
@@ -129,5 +128,6 @@ __interrupt void Timer_A (void)
 		BACK.debounce();
 		ENTER.debounce();
 	}
-	_BIC_SR(LPM3_EXIT); // wake up from low power mode
+    __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
 }
+

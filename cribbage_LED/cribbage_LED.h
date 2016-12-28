@@ -2,7 +2,12 @@
 // Ben Froelich 2016-11-19
 #ifndef CRIBBAGE_LED_H
 #define CRIBBAGE_LED_H
-#include "inputHandler.h"
+
+// declare the input pin class, the cribbage library uses it
+namespace IO
+{
+	class InputPin;
+}
 
 namespace Cribbage
 {
@@ -57,12 +62,13 @@ namespace Cribbage
 	class InputHandler // TODO: : public IO
 	{
 	public:
-//		typedef enum Input_t {UP, DOWN, RIGHT, LEFT, BACK, ENTER} Input_t;
 	};
+	// this display driver uses the I2C library to control the driver matrix
 	class DisplayDriver
 	{
 	public:
 		DisplayDriver();
+		void setupHW(double F_MCLK);	// setup I2C
 		void clear();
 		void clear(unsigned LED);
 		void set(unsigned LED);
@@ -71,6 +77,7 @@ namespace Cribbage
 		void disable();	// disable the matrix
 	private:
 		// constants
+		const double F_I2C;
 		static const int numAnodes = 24;
 		static const int numCathodes = 20;
 		static const int numLEDs = numAnodes*numCathodes;
@@ -118,6 +125,8 @@ namespace Cribbage
 	{
 	public:
 		Controller();
+		// init driver, game status, and hardware
+		void sysInit(double F_MCLK);
 		void run();	// run a pass of the state machine
 		virtual void enter();
 		// figure out what the next state will be
