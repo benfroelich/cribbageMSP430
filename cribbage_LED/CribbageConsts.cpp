@@ -6,7 +6,10 @@ namespace Cribbage
 	 const int UI::playerOffset[Cribbage::MAX_PLAYERS] =
 	{0, 120, 240, 360};
 
-	/* calculate the channels to iluminate for an LED as:
+	/*
+	 calculate the LED to light up for a player:
+	 	 LEDStates[playeroffset+playerScore] = true;
+	 calculate the channels to iluminate for an LED as:
 		 anodeToTurnOn = anode[LED%numCathodes]
 		 cathodeToTurnOn = cathode[LED%numAnodes]
 	 that's how to translate LED -> anode/cathode.

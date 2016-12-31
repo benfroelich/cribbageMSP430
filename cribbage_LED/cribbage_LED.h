@@ -97,7 +97,7 @@ namespace Cribbage
 		} DrvMap_t;
 		static const DrvMap_t anodes[numAnodes], cathodes[numCathodes];
 		char LEDStates[numLEDs];
-		uint8_t drvBits[numLEDDrivers]
+		uint8_t drvBits[numLEDDrivers];
 		bool enabled;
 	};
 	// user interface class that controls the display
