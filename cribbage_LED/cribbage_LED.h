@@ -3,6 +3,9 @@
 #ifndef CRIBBAGE_LED_H
 #define CRIBBAGE_LED_H
 
+// include to use standard types
+#include <stdint.h>
+
 // declare the input pin class, the cribbage library uses it
 namespace IO
 {
@@ -78,9 +81,13 @@ namespace Cribbage
 	private:
 		// constants
 		const double F_I2C;
+		// 24 anode x 20 cathode matrix driven by IO expanders
 		static const int numAnodes = 24;
 		static const int numCathodes = 20;
 		static const int numLEDs = numAnodes*numCathodes;
+		static const int numLEDDrivers = 6;	// 6 LED drivers
+		// TODO: is numLEDsPerDriver needed?
+		static const int numLEDsPerDriver = 8;	// 8 LED's per driver IC
 		void wrBitsISR();	// only call from ISR
 		// LED data structures, static to allow access from ISR
 		typedef struct DrvMap_t
@@ -90,6 +97,7 @@ namespace Cribbage
 		} DrvMap_t;
 		static const DrvMap_t anodes[numAnodes], cathodes[numCathodes];
 		char LEDStates[numLEDs];
+		uint8_t drvBits[numLEDDrivers]
 		bool enabled;
 	};
 	// user interface class that controls the display

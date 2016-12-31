@@ -55,9 +55,6 @@ int main(void)
 		{
 			P4OUT ^= BIT6;
 		}
-		// dummy i2c transmission
-		UCB0TXBUF = 0x77; // send 077h
-
 		_BIS_SR(LPM0_bits);	// enter LPM0
 	}
 

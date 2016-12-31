@@ -4,10 +4,9 @@
 #include "cribbage_LED.h"
 #include <cassert>
 
+// define the externally declared I2C object here to claim it
 IO::USCI_I2C IO::i2c;
 
-const int Cribbage::UI::playerOffset[Cribbage::MAX_PLAYERS] =
-	{0, 120, 240, 360};
 char Cribbage::Player::numPlayers = 0;
 Cribbage::Player players_g[Cribbage::MAX_PLAYERS];
 Cribbage::Player::Player()
@@ -24,7 +23,8 @@ Cribbage::DisplayDriver::DisplayDriver() : F_I2C(100e3)
 }
 void Cribbage::DisplayDriver::setupHW(double F_MCLK)
 {
-	IO::i2c.init(F_MCLK, 100e3, 0x40);
+	// initialize the I2C driver to 100kHz
+	IO::i2c.init(F_MCLK, 100e3, 0x40, &P1SEL1, (BIT6 | BIT7));
 }
 void Cribbage::DisplayDriver::clear()
 {
