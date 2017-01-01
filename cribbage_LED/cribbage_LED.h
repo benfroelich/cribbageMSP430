@@ -71,7 +71,8 @@ namespace Cribbage
 	{
 	public:
 		DisplayDriver();
-		void setupHW(double F_MCLK);	// setup I2C
+		void setupHW(double F_MCLK = 8e6);	// setup I2C
+		bool checkHW();
 		void clear();
 		void clear(unsigned LED);
 		void set(unsigned LED);
@@ -82,12 +83,14 @@ namespace Cribbage
 		// constants
 		const double F_I2C;
 		// 24 anode x 20 cathode matrix driven by IO expanders
-		static const int numAnodes = 24;
-		static const int numCathodes = 20;
-		static const int numLEDs = numAnodes*numCathodes;
-		static const int numLEDDrivers = 6;	// 6 LED drivers
+		static const int NUM_ANODES = 24;
+		static const int NUM_CATHODES = 20;
+		static const int NUM_LEDS = NUM_ANODES*NUM_CATHODES;
+		static const int NUM_LED_DRIVERS = 6;	// 6 LED drivers
+		// the base I2C address for the LED drivers
+		static const int BASE_I2C_ADDR = 0x40>>1;
 		// TODO: is numLEDsPerDriver needed?
-		static const int numLEDsPerDriver = 8;	// 8 LED's per driver IC
+		static const int NUM_LEDS_PER_DRIVER = 8;	// 8 LED's per driver IC
 		void wrBitsISR();	// only call from ISR
 		// LED data structures, static to allow access from ISR
 		typedef struct DrvMap_t
@@ -95,10 +98,11 @@ namespace Cribbage
 			char bank;	// IO expander that this LED pin is connected to
 			char ch;	// IO expander channel that this LED pin is connected to
 		} DrvMap_t;
-		static const DrvMap_t anodes[numAnodes], cathodes[numCathodes];
-		char LEDStates[numLEDs];
-		uint8_t drvBits[numLEDDrivers];
+		static const DrvMap_t anodes[NUM_ANODES], cathodes[NUM_CATHODES];
+		char LEDStates[NUM_LEDS];
+		uint8_t drvBits[NUM_LED_DRIVERS];
 		bool enabled;
+		bool initialized;
 	};
 	// user interface class that controls the display
 	class UI: public DisplayDriver, public InputHandler

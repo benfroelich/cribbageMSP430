@@ -15,8 +15,13 @@ void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 		volatile unsigned char *SEL_PORT, uint8_t PINS)
 {
 	this->defAddr = defaultAddress;
+	// configure I2C pins, e.g. P1SEL1 |= (BIT6 | BIT7)
+	*SEL_PORT |= PINS;
+	if(UCB0STAT & UCBUSY)
+		// send a stop
+		UCB0CTLW0 |= UCTXSTP;
 	// put eUSCI_B in reset state while we config it
-	UCB0CTLW0 |= UCSWRST;
+	UCB0CTLW0 = UCSWRST;
 	// use SMCLK as clock source, I2C Mode, send I2C stop
 	UCB0CTLW0 |= UCMODE_3 | UCMST | UCSSEL__SMCLK;
 	assert(F_MCLK/F_I2C > 1);
@@ -24,19 +29,22 @@ void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 	// TX this many bytes of data
 	// this is a typical transmission length for I2C
 	// w/ 8-bit registers
-	UCB0TBCNT = 0x01;
+	//UCB0TBCNT = 0x01;
 	UCB0I2CSA = defaultAddress; 	// client address
-	// configure I2C pins, e.g. P1SEL1 |= (BIT6 | BIT7)
-	*SEL_PORT |= PINS;
-	UCB0CTL1 &= ~UCSWRST; 	// put eUSCI_B in operational state
-	// enable TX interrupt and NACK interrupt
+	UCB0CTLW0 &= ~UCSWRST; 	// put eUSCI_B in operational state
 	UCB0IE |= UCTXIE0 | UCNACKIE;
+		UCB0CTLW0 |= UCTXSTP;
+
+	// enable TX interrupt and NACK interrupt
 }
 void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 		uint8_t *recvData, uint16_t wakeupSRBits)
 {
 	// we can't start another sequence until the current one is done
-	while(state != IDLE);
+	if(UCB0STAT & UCBUSY)
+		// send a stop
+		UCB0CTLW0 |= UCTXSTP;
+	while(UCB0STAT & UCBUSY);
 	// load the sequence into the library:
 	assert(seq);	// ensure we have a sequence
 	this->seq = seq;
@@ -49,7 +57,30 @@ void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 	// update status
 	seqCtr = 0;
 	state = START;
+	handleSeq();	// start the sequence transmission
 	// exit and handle the transaction from interrupts
+}
+bool IO::USCI_I2C::checkAddr(uint8_t addr)
+{
+	uint8_t clientAddrBak, UCB0IEBak;
+	bool present;
+	UCB0IEBak = UCB0IE;                      // restore old UCB0I2CIE
+	clientAddrBak = UCB0I2CSA;                   // store old slave address
+	UCB0IE &= ~ UCNACKIE;                    // no NACK interrupt
+	UCB0I2CSA = addr;                  // set slave address
+	UCB0IE &= ~(UCTXIE0 | UCRXIE0);              // no RX or TX interrupts
+	// disable interrupts so we can handle all interrupt flags here
+	// and not run any of the ISR code
+	__disable_interrupt();
+	UCB0CTLW0 |= UCTR | UCTXSTT | UCTXSTP;       // I2C TX, start condition
+	while (UCB0CTLW0 & UCTXSTP);                 // wait for STOP condition
+	UCB0CTLW0 |= UCTXSTP;
+	present = !(UCB0IFG & UCNACKIFG);
+	UCB0IFG = 0x00;		// clear the interrupts
+	__enable_interrupt();
+	UCB0I2CSA = clientAddrBak;                   // restore slave address
+	UCB0IE = UCB0IEBak;                   // restore interrupts
+	return present;
 }
 inline void IO::USCI_I2C::handleSeq()
 {
@@ -68,20 +99,23 @@ inline void IO::USCI_I2C::handleSeq()
 	if(seq[seqCtr] & ADDR)
 	{
 		UCB0I2CSA = (uint8_t)seq[seqCtr++];
-		// recursively analyze the next sequence since this
-		// is only building part of a transmission
-		// and we still haven't transmitted anything
-		handleSeq();
 	}
-	// 2a. check for a data read byte
+	// 2. initiate transaction if it's the first transaction
+	if(seqCtr == 0)
+	{
+		UCB0CTLW0 |= UCTR | UCTXSTT;
+	}
+	// 3a. check for a data read byte
 	if(seq[seqCtr] & READ)
 	{
 		// load data from bus
 		// TODO - implement reads, set controller
 		// to a byte from the client selected
 		assert(0);
+		// try this:
+		// 1) UCTR=0 (Receiver) 2) UCTXSTT=1
 	}
-	// 2b. check for a data write byte
+	// 3b. check for a data write byte
 	else if(seq[seqCtr] & WRITE)
 	{
 		/* "After initialization, master transmitter mode is initiated
@@ -91,8 +125,8 @@ inline void IO::USCI_I2C::handleSeq()
 		 * UCTXSTT to generate a START condition." - SLAU367L, 26.3.5.2.1*/
 
 		// load new byte into register
-		UCB0TXBUF = (uint8_t)seq[seqCtr++];
 		UCB0CTLW0 |= UCTR | UCTXSTT;                 // I2C TX, start condition
+		UCB0TXBUF = (uint8_t)seq[seqCtr++];
 	}
 }
 

@@ -2,6 +2,10 @@
 #include <intrinsics.h>
 #include "InputHandler.h"
 #include "cribbage_LED.h"
+// TODO: remove, this is just for debugging I2C
+#include "USCII2C.h"
+// include to use standard types
+#include <stdint.h>
 // switch to turn off use of features on the launchpad
 // E.g. LED's and buttons on the launchpad
 #define LAUNCHPAD
@@ -38,18 +42,25 @@ int main(void)
     setUpTimers(F_ACLK, F_PIN_INTERRUPT);
     // init inputs
     setUpPins(F_PIN_INTERRUPT);
-    game.sysInit(F_MCLK);
 	// clear lock on port settings
     PM5CTL0 &= ~LOCKLPM5;
 
+    // setup and check HW:
+    game.sysInit(F_MCLK);
+
+    // TODO: remove, this is just for debugging I2C
+    uint16_t dummyTransaction[3] = {
+    		0x0001 & IO::USCI_I2C::WRITE,
+    		0x00BE & IO::USCI_I2C::WRITE,
+			0x00EF & IO::USCI_I2C::WRITE};
 	__enable_interrupt();
 	while(1)
 	{
-		UCB0CTLW0 |= UCTR | UCTXSTT;
 		_delay_cycles(1000);
 		if(UP.read())
 		{
 			P1OUT ^= BIT0;
+			IO::i2c.transaction(dummyTransaction, 3, 0, 0);
 		}
 		if(DOWN.read())
 		{
@@ -62,6 +73,9 @@ int main(void)
 	return 0;
 }
 
+//////////////////////////////////////////////////////////////
+// main support functions and ISRs
+//////////////////////////////////////////////////////////////
 void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
 //void setUpTimers(const double F_CLK)
 {

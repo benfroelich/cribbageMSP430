@@ -3,11 +3,13 @@
 #include "USCII2C.h"
 #include "cribbage_LED.h"
 #include <cassert>
+#include <stdio.h>
 
 // define the externally declared I2C object here to claim it
 IO::USCI_I2C IO::i2c;
 
 char Cribbage::Player::numPlayers = 0;
+// todo: what was this for?
 Cribbage::Player players_g[Cribbage::MAX_PLAYERS];
 Cribbage::Player::Player()
 {
@@ -18,18 +20,44 @@ Cribbage::Player::Player()
 Cribbage::DisplayDriver::DisplayDriver() : F_I2C(100e3)
 {
 	// set up variables
+	this->initialized = false;
 	clear();
 	disable();
 }
 void Cribbage::DisplayDriver::setupHW(double F_MCLK)
 {
 	// initialize the I2C driver to 100kHz
-	IO::i2c.init(F_MCLK, 100e3, 0x40, &P1SEL1, (BIT6 | BIT7));
+	IO::i2c.init(F_MCLK, 100e3, BASE_I2C_ADDR, &P1SEL1, (BIT6 | BIT7));
+	this->initialized = true;
+	checkHW();
+}
+bool Cribbage::DisplayDriver::checkHW()
+{
+	bool LEDDriverCommEstablished[NUM_LED_DRIVERS];
+	bool stat = true;
+	if(!initialized) setupHW();
+	for(unsigned bank = 0; bank < NUM_LED_DRIVERS; bank++)
+	{
+		LEDDriverCommEstablished[bank] = true;
+		if(!IO::i2c.checkAddr(BASE_I2C_ADDR + bank))
+		{
+			LEDDriverCommEstablished[bank] = false;
+			printf("checkHW: error! could not establish "
+					"communication with driver %d\n", bank);
+			stat = false;
+		}
+		else
+			printf("checkHW: established "
+					"communication with driver %d\n", bank);
+	}
+	return stat;
+
+
 }
 void Cribbage::DisplayDriver::clear()
 {
 	// set gpio expanders to all low or tri-state
-	for(unsigned int i=0; i<numLEDs; i++) this->LEDStates[i] = false;
+	for(unsigned int i=0; i<NUM_LEDS; i++) this->LEDStates[i] = false;
 }
 void Cribbage::DisplayDriver::clear(unsigned LED)
 {
@@ -41,7 +69,7 @@ void Cribbage::DisplayDriver::set(unsigned LED)
 }
 void Cribbage::DisplayDriver::ctrl(unsigned LED, bool on)
 {
-	assert(LED<numLEDs);
+	assert(LED<NUM_LEDS);
 	LEDStates[LED] = on;
 }
 void Cribbage::DisplayDriver::enable()

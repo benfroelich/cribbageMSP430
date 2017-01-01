@@ -24,7 +24,7 @@ namespace Cribbage
 	*/
 	// bank == I2C address
 	// channel == output channel of the driver
-	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::anodes[UI::DisplayDriver::numAnodes] =
+	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::anodes[UI::DisplayDriver::NUM_ANODES] =
 	{
 	//		BANK	CH
 			{0,		0},	// anode 0
@@ -55,7 +55,7 @@ namespace Cribbage
 			{5,		7},	// anode 23
 	};
 
-	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::cathodes[UI::DisplayDriver::numCathodes] =
+	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::cathodes[UI::DisplayDriver::NUM_CATHODES] =
 	{
 	//		BANK	CH
 			{0,		3},	// cathode 0

@@ -40,6 +40,11 @@ namespace IO
 //		void setAddr(uint8_t newAddr) {assert(state == IDLE); addr = newAddr;};
 		// Use this to check whether a previously scheduled I2C sequence has been fully processed.
 		inline bool done() { return(state == IDLE); };
+		// returns true if an acknowledge was received for the given address
+		// ported from TI_USCI_I2C_slave_present
+		// 	- made to work for eUSCI
+		//	- replaced master-slave terminology w/ coordinator-client
+		bool checkAddr(uint8_t addr);
 		// used by ISR
 		inline void handleSeq();
 	private:
