@@ -35,9 +35,6 @@ namespace IO
 		//
 		void transaction(uint16_t *seq, uint16_t seqLen,
 				uint8_t *recvData, uint16_t wakeupSRBits);
-//		void write(uint8_t *data);
-//		void read(uint8_t *data);
-//		void setAddr(uint8_t newAddr) {assert(state == IDLE); addr = newAddr;};
 		// Use this to check whether a previously scheduled I2C sequence has been fully processed.
 		inline bool done() { return(state == IDLE); };
 		// returns true if an acknowledge was received for the given address

@@ -120,9 +120,11 @@ inline void IO::USCI_I2C::handleTxInt()
 	{
 		UCB0I2CSA = (uint8_t)curSeq;
 		curSeq = seq[++seqCtr];	// increment and process the next sequence
+		if(isWrite(curSeq)) startWr();
+		if(isRead(curSeq)) startRd();
 	}
 	// 2a. check for a data write byte
-	if(isWrite(curSeq))
+	else if(isWrite(curSeq))
 	{
 		// write data from the sequence entry to the transmitter buffer
 		UCB0TXBUF = (uint8_t)curSeq;
@@ -153,11 +155,10 @@ inline void IO::USCI_I2C::handleRxInt()
 	// 1. check for an address change
 	if(isAddr(curSeq))
 	{
-		UCB0I2CSA = (uint8_t)curSeq;
-		curSeq = seq[++seqCtr];	// increment and process the next sequence
+		startSeq();
 	}
 	// 2a. check for a data write byte and start the sequence if present
-	if(isWrite(curSeq)) startWr();
+	else if(isWrite(curSeq)) startWr();
 	// 2b. check for a data read byte and grab it
 	else if(isRead(curSeq))
 	{
@@ -190,12 +191,10 @@ __interrupt void EUSCI_B0(void)
 	case USCI_I2C_UCTXIFG1:  break;     // Vector 20: TXIFG1
 	case USCI_I2C_UCRXIFG0: 		    // Vector 22: RXIFG0 - received data is ready
 		IO::i2c.handleRxInt();
-		__bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
 		break;
 	case USCI_I2C_UCTXIFG0:             // Vector 24: TXIFG0
 		// we completed a transaction, check for the next cmd
 		IO::i2c.handleTxInt();
-		__bic_SR_register_on_exit(LPM0_bits); // Exit LPM0
 		break;
 	default: break;
 	}

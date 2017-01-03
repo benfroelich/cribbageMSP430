@@ -52,7 +52,17 @@ int main(void)
     uint16_t dummyTransaction[] =
     {
     		0x0040>>1 	| IO::USCI_I2C::ADDR,	// set address
-    		0x0002 		| IO::USCI_I2C::WRITE,	// set ptr
+    		0x0003 		| IO::USCI_I2C::WRITE,	// set ptr
+    		0x00FF 		| IO::USCI_I2C::WRITE,	// write to register
+			0x0040>>1	| IO::USCI_I2C::ADDR,	// set address
+    		0x0001 		| IO::USCI_I2C::WRITE,	// set ptr
+    		0x00AA 		| IO::USCI_I2C::WRITE,	// write to register
+
+    		0x0046>>1 	| IO::USCI_I2C::ADDR,	// set address
+    		0x0003 		| IO::USCI_I2C::WRITE,	// set ptr
+    		0x00FF 		| IO::USCI_I2C::WRITE,	// write to register
+			0x0046>>1	| IO::USCI_I2C::ADDR,	// set address
+    		0x0001 		| IO::USCI_I2C::WRITE,	// set ptr
     		0x00AA 		| IO::USCI_I2C::WRITE	// write to register
     };
 	__enable_interrupt();
