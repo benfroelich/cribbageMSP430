@@ -26,6 +26,8 @@ cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/in
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdio.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdarg.h
 
 ../cribbage_driver.cpp: 
 /Applications/ti/ccsv6/ccs_base/msp430/include/msp430.h: 
@@ -53,3 +55,5 @@ cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/in
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdio.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdarg.h: 

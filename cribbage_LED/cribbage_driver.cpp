@@ -47,8 +47,8 @@ bool Cribbage::DisplayDriver::checkHW()
 			stat = false;
 		}
 		else
-			printf("checkHW: established "
-					"communication with driver %d\n", bank);
+			printf("checkHW: established communication with"
+					" driver %d - it's party time!\n", bank);
 	}
 	return stat;
 

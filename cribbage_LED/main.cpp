@@ -49,10 +49,12 @@ int main(void)
     game.sysInit(F_MCLK);
 
     // TODO: remove, this is just for debugging I2C
-    uint16_t dummyTransaction[3] = {
-    		0x0001 & IO::USCI_I2C::WRITE,
-    		0x00BE & IO::USCI_I2C::WRITE,
-			0x00EF & IO::USCI_I2C::WRITE};
+    uint16_t dummyTransaction[] =
+    {
+    		0x0040>>1 	| IO::USCI_I2C::ADDR,	// set address
+    		0x0002 		| IO::USCI_I2C::WRITE,	// set ptr
+    		0x00AA 		| IO::USCI_I2C::WRITE	// write to register
+    };
 	__enable_interrupt();
 	while(1)
 	{
@@ -60,7 +62,7 @@ int main(void)
 		if(UP.read())
 		{
 			P1OUT ^= BIT0;
-			IO::i2c.transaction(dummyTransaction, 3, 0, 0);
+			IO::i2c.transaction(dummyTransaction, sizeof(dummyTransaction)/sizeof(dummyTransaction[0]), 0, 0);
 		}
 		if(DOWN.read())
 		{

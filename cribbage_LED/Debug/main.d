@@ -8,6 +8,8 @@ main.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intri
 main.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h
 main.obj: ../InputHandler.h
 main.obj: ../cribbage_LED.h
+main.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h
+main.obj: ../USCII2C.h
 
 ../main.cpp: 
 /Applications/ti/ccsv6/ccs_base/msp430/include/msp430.h: 
@@ -17,3 +19,5 @@ main.obj: ../cribbage_LED.h
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h: 
 ../InputHandler.h: 
 ../cribbage_LED.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h: 
+../USCII2C.h: 

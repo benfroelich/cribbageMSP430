@@ -46,8 +46,19 @@ namespace IO
 		//	- replaced master-slave terminology w/ coordinator-client
 		bool checkAddr(uint8_t addr);
 		// used by ISR
-		inline void handleSeq();
+		inline void handleTxInt();
+		inline void handleRxInt();
+		inline void startSeq();
 	private:
+		// check the flag set in the data packet
+		inline bool isAddr(uint16_t seq)	{ return seq & ADDR; };
+		inline bool isWrite(uint16_t seq) 	{ return seq & WRITE; };
+		inline bool isRead(uint16_t seq) 	{ return seq & READ; };
+		// start a write command (Coordinator-sender)
+		inline void startWr();
+		// start a read command (Coordinator-receiver)
+		inline void startRd();
+
 		// used by the state machine
 		// set even values to each state to allow quick processing
 		// in ISR using the __even_in_range intrinsic
