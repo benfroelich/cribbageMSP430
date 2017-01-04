@@ -114,12 +114,12 @@ void setUpPins(const double F_PIN_INTERRUPT)
 	Cribbage::ENTER = &ENTER;
 
 	// initialize the input pins
-	UP.init(25.0, 3.0, 100.0, t_int_ms);
-	DOWN.init(25.0, 3.0, 100.0, t_int_ms);
-	RIGHT.init(25.0, 3.0, 100.0, t_int_ms);
-	LEFT.init(25.0, 3.0, 100.0, t_int_ms);
-	BACK.init(25.0, 3.0, 100.0, t_int_ms);
-	ENTER.init(25.0, 3.0, 100.0, t_int_ms);
+	UP.init(	25.0,	3.0,	100.0,	t_int_ms);
+	DOWN.init(	25.0,	3.0,	100.0,	t_int_ms);
+	RIGHT.init(	25.0,	3.0,	100.0,	t_int_ms);
+	LEFT.init(	25.0,	3.0,	100.0,	t_int_ms);
+	BACK.init(	25.0,	3.0,	100.0,	t_int_ms);
+	ENTER.init(	25.0,	3.0,	100.0,	t_int_ms);
 #ifdef LAUNCHPAD
     // these pins are for debugging on the launchpad only
 	P1DIR |= BIT0;

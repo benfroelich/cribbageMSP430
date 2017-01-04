@@ -27,7 +27,7 @@ Cribbage::DisplayDriver::DisplayDriver() : F_I2C(100e3)
 void Cribbage::DisplayDriver::setupHW(double F_MCLK)
 {
 	// initialize the I2C driver to 100kHz
-	IO::i2c.init(F_MCLK, 100e3, BASE_I2C_ADDR, &P1SEL1, (BIT6 | BIT7));
+	IO::i2c.init(F_MCLK, 100e3, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
 	this->initialized = true;
 	checkHW();
 }

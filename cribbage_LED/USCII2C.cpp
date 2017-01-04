@@ -6,14 +6,17 @@
 #include "msp430.h"
 #include "USCII2C.h"
 #include <cassert>
+#include <stdio.h>
 
 IO::USCI_I2C::USCI_I2C()
 {
 	this->state = IDLE;
 }
 void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
-		volatile unsigned char *SEL_PORT, uint8_t PINS)
+		unsigned busyCnts, volatile unsigned char *SEL_PORT, uint8_t PINS)
 {
+	this->busyCnts = busyCnts;
+	if(this->busyCnts == 0) this->busyCnts = 1;
 	this->defAddr = defaultAddress;
 	// configure I2C pins, e.g. P1SEL1 |= (BIT6 | BIT7)
 	*SEL_PORT |= PINS;
@@ -23,15 +26,27 @@ void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 	UCB0CTLW0 |= UCMODE_3 | UCMST | UCSSEL__SMCLK;
 	assert(F_MCLK/F_I2C > 1);
 	UCB0BRW = F_MCLK/F_I2C;	// set I2C frequency
-	// TX this many bytes of data
-	// this is a typical transmission length for I2C
-	// w/ 8-bit registers
-	//UCB0TBCNT = 0x01;
 	UCB0I2CSA = defaultAddress; 	// client address
 	UCB0CTLW0 &= ~UCSWRST; 	// put eUSCI_B in operational state
 	// enable TX interrupt and NACK interrupt
 	UCB0IE |= UCTXIE0 | UCNACKIE;
 }
+
+void IO::USCI_I2C::waitForBusFree() {
+	unsigned cnt = 0;
+	while (UCB0STAT & UCBBUSY)
+	{
+		// increment counter
+		busyCnts++;
+		// if counter hits threshold, alert user
+		if(cnt == busyCnts)
+		{
+			printf("oops! I2C bus frozen\n");
+			assert(0);
+		}
+	}
+}
+
 void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 		uint8_t *recvData, uint16_t wakeupSRBits)
 {
@@ -39,7 +54,7 @@ void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 	if(UCB0STAT & UCBBUSY)
 		// send a stop
 		UCB0CTLW0 |= UCTXSTP;
-	while(UCB0STAT & UCBBUSY);
+	waitForBusFree();
 	// load the sequence into the library:
 	assert(seq);	// ensure we have a sequence
 	this->seq = seq;
@@ -100,70 +115,70 @@ inline void IO::USCI_I2C::startSeq()
 	// 2b. check for a data write byte
 	else if(isWrite(curSeq)) startWr();
 }
-inline void IO::USCI_I2C::handleTxInt()
+inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 {
-	uint16_t curSeq;
-	// check for end of sequence
-	if (seqCtr == seqLen)
-	{
-		// send a stop
-		UCB0CTLW0 |= UCTXSTP;
-		// set status to idle
-		this->state = IDLE;
-		// TODO: disable interrupts until a new sequence is loaded?
-		return;
-	}
-	curSeq = seq[seqCtr];
-	// otherwise, check the current sequence
-	// 1. check for an address change
-	if(isAddr(curSeq))
-	{
-		UCB0I2CSA = (uint8_t)curSeq;
-		curSeq = seq[++seqCtr];	// increment and process the next sequence
-		if(isWrite(curSeq)) startWr();
-		if(isRead(curSeq)) startRd();
-	}
-	// 2a. check for a data write byte
-	else if(isWrite(curSeq))
+	// TODO: make class private variable?
+	uint16_t curCmd = seq[seqCtr];
+	// use this to prepare for the next command. Don't set here to avoid memory excursions
+	uint16_t nextCmd;
+	/////////////
+	// process current command:
+	// check for a data write byte
+	if(isWrite(curCmd))
 	{
 		// write data from the sequence entry to the transmitter buffer
-		UCB0TXBUF = (uint8_t)curSeq;
-		seqCtr++;	// increment for the next sequence process
+	//	UCB0TXBUF = (uint8_t)curSeq; // causes intermittent data loss :o cmds get truncated to 8 bits!
+		UCB0TXBUF = curCmd;
 	}
-	// 2b. check for a data read byte,
-	// and restart in coordinator-reciever mode if it is
-	else if(isRead(curSeq)) startRd();
-}
-inline void IO::USCI_I2C::handleRxInt()
-{
-	uint16_t curSeq;
-	// check for end of sequence
-	// TODO: store data
-
-	// process next sequence entry:
-	if (seqCtr == seqLen)
-	{
-		// send a stop
-		UCB0CTLW0 |= UCTXSTP;
-		// set status to idle
-		this->state = IDLE;
-		// TODO: disable interrupts until a new sequence is loaded?
-		return;
-	}
-	curSeq = seq[seqCtr];
-	// otherwise, check the current sequence
-	// 1. check for an address change
-	if(isAddr(curSeq))
-	{
-		startSeq();
-	}
-	// 2a. check for a data write byte and start the sequence if present
-	else if(isWrite(curSeq)) startWr();
-	// 2b. check for a data read byte and grab it
-	else if(isRead(curSeq))
+	// check for a data read byte
+	else if(isRead(curCmd))
 	{
 		// TODO: grab data from register
 		unsigned dataRead = UCB0RXBUF;
+	}
+
+	//////////////////////
+	// prepare for next command
+	// check for an impending stop or start
+	// 1. STOP: end of sequence encountered
+	// check for end of sequence
+	if (seqCtr == seqLen)
+	{
+		// send a stop
+		UCB0CTLW0 |= UCTXSTP;
+		// set status to idle so user knows we're ready for a new sequence
+		this->state = IDLE;
+		return;
+	}
+	// no stop yet, prepare for the next command in the sequence
+	nextCmd = seq[++seqCtr];
+	// 2. RESTART w/ current address:
+	// 2.a. read->write
+	if(isWrite(nextCmd) & !isWrInt)
+	{
+		startWr();
+	}
+	// 2.b. write->read
+	else if(isRead(nextCmd) & isWrInt)
+	{
+		startRd();
+	}
+	// 3. RESTART w/ new address
+	else if(isAddr(nextCmd))
+	{
+		UCB0I2CSA = (uint8_t)nextCmd;
+		/* "Setting UCTXSTT generates a repeated START condition. In this case,
+		 UCTR may be set or cleared to configure transmitter or receiver,
+		 and a different slave address may be written into UCBxI2CSA, if
+		 desired." */
+		// to accomplish this, send a start write or start read command
+		// this will set the UCTR flag appropriately and set the start bit
+
+		// increment counter past address cmd to get to next rd/wr command
+		// (we need to peek to see if it's a read or a write).
+		nextCmd = seq[++seqCtr];
+		if(isWrite(nextCmd)) startWr();
+		else if(isRead(nextCmd)) startRd();
 	}
 }
 
@@ -190,11 +205,11 @@ __interrupt void EUSCI_B0(void)
 	case USCI_I2C_UCRXIFG1:  break;     // Vector 18: RXIFG1
 	case USCI_I2C_UCTXIFG1:  break;     // Vector 20: TXIFG1
 	case USCI_I2C_UCRXIFG0: 		    // Vector 22: RXIFG0 - received data is ready
-		IO::i2c.handleRxInt();
+		IO::i2c.handleTxRxInt(false);
 		break;
 	case USCI_I2C_UCTXIFG0:             // Vector 24: TXIFG0
 		// we completed a transaction, check for the next cmd
-		IO::i2c.handleTxInt();
+		IO::i2c.handleTxRxInt(true);
 		break;
 	default: break;
 	}
