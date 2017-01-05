@@ -119,10 +119,12 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 {
 	// TODO: make class private variable?
 	uint16_t curCmd = seq[seqCtr];
-	// use this to prepare for the next command. Don't set here to avoid memory excursions
+	// use this to prepare for the next command.
+	// Don't set yet because we could be at the end of the sequence.
 	uint16_t nextCmd;
-	/////////////
+	//////////////////////
 	// process current command:
+	//////////////////////
 	// check for a data write byte
 	if(isWrite(curCmd))
 	{
@@ -139,9 +141,9 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 
 	//////////////////////
 	// prepare for next command
+	//////////////////////
 	// check for an impending stop or start
-	// 1. STOP: end of sequence encountered
-	// check for end of sequence
+	// 1. STOP: end of sequence encountered - check for end of sequence
 	if (seqCtr == seqLen)
 	{
 		// send a stop
@@ -150,8 +152,9 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 		this->state = IDLE;
 		return;
 	}
-	// no stop yet, prepare for the next command in the sequence
-	nextCmd = seq[++seqCtr];
+	// no stop yet, load the next command in the sequence
+	seqCtr++;
+	nextCmd = seq[seqCtr];
 	// 2. RESTART w/ current address:
 	// 2.a. read->write
 	if(isWrite(nextCmd) & !isWrInt)
@@ -176,6 +179,7 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 
 		// increment counter past address cmd to get to next rd/wr command
 		// (we need to peek to see if it's a read or a write).
+		_delay_cycles(2000);
 		nextCmd = seq[++seqCtr];
 		if(isWrite(nextCmd)) startWr();
 		else if(isRead(nextCmd)) startRd();
