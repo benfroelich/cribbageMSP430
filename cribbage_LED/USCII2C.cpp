@@ -66,7 +66,7 @@ void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 	this->wakeupSRBits = wakeupSRBits;
 	// update status
 	seqCtr = 0;
-	state = START;
+	state = WORKING;
 	// start the sequence transmission, trigger, but don't set data yet
 	startSeq();
 	// exit and handle the transaction from interrupts
@@ -108,42 +108,23 @@ inline void IO::USCI_I2C::startSeq()
 	if(isAddr(curSeq))
 	{
 		UCB0I2CSA = (uint8_t)curSeq;
-		curSeq = seq[++seqCtr];	// increment and process the next sequence entry
 	}
 	// 2a. check for a data read byte
-	if(isRead(curSeq)) startRd();
+	if(isRdAddr(curSeq)) startRd();
 	// 2b. check for a data write byte
-	else if(isWrite(curSeq)) startWr();
+	else if(isWrAddr(curSeq)) startWr();
+	seqCtr++;
 }
 inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 {
 	// TODO: make class private variable?
-	uint16_t curCmd = seq[seqCtr];
-	// use this to prepare for the next command.
-	// Don't set yet because we could be at the end of the sequence.
-	uint16_t nextCmd;
-	//////////////////////
-	// process current command:
-	//////////////////////
-	// check for a data write byte
-	if(isWrite(curCmd))
-	{
-		// write data from the sequence entry to the transmitter buffer
-	//	UCB0TXBUF = (uint8_t)curSeq; // causes intermittent data loss :o cmds get truncated to 8 bits!
-		UCB0TXBUF = curCmd;
-	}
-	// check for a data read byte
-	else if(isRead(curCmd))
-	{
-		// TODO: grab data from register
-		unsigned dataRead = UCB0RXBUF;
-	}
+	uint16_t curCmd;
+	uint16_t prevCmd;
+	// only set prevCmd if we aren't at the beginning.
+	if(seqCtr > 0) prevCmd = seq[seqCtr-1];
 
-	//////////////////////
-	// prepare for next command
-	//////////////////////
 	// check for an impending stop or start
-	// 1. STOP: end of sequence encountered - check for end of sequence
+	// 1. STOP: end of sequence encountered
 	if (seqCtr == seqLen)
 	{
 		// send a stop
@@ -152,38 +133,37 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 		this->state = IDLE;
 		return;
 	}
-	// no stop yet, load the next command in the sequence
-	seqCtr++;
-	nextCmd = seq[seqCtr];
-	// 2. RESTART w/ current address:
-	// 2.a. read->write
-	if(isWrite(nextCmd) & !isWrInt)
+	// set current command here so we don't read outside the array
+	// if we were at the end of the sequence
+	curCmd = seq[seqCtr];
+	// 1. check for address:
+	if(isAddr(curCmd))
 	{
-		startWr();
-	}
-	// 2.b. write->read
-	else if(isRead(nextCmd) & isWrInt)
-	{
-		startRd();
-	}
-	// 3. RESTART w/ new address
-	else if(isAddr(nextCmd))
-	{
-		UCB0I2CSA = (uint8_t)nextCmd;
+		UCB0I2CSA = (uint8_t)curCmd;
 		/* "Setting UCTXSTT generates a repeated START condition. In this case,
 		 UCTR may be set or cleared to configure transmitter or receiver,
 		 and a different slave address may be written into UCBxI2CSA, if
 		 desired." */
 		// to accomplish this, send a start write or start read command
 		// this will set the UCTR flag appropriately and set the start bit
-
-		// increment counter past address cmd to get to next rd/wr command
-		// (we need to peek to see if it's a read or a write).
-		_delay_cycles(2000);
-		nextCmd = seq[++seqCtr];
-		if(isWrite(nextCmd)) startWr();
-		else if(isRead(nextCmd)) startRd();
+		if(isWrAddr(curCmd)) 	startWr();
+		else 					startRd();
 	}
+	// check for a data byte to TX/RX
+	else if(isWrInt)
+	{
+		// write data from the sequence entry to the transmitter buffer
+	//	UCB0TXBUF = (uint8_t)curSeq; // causes intermittent data loss :o cmds get truncated to 8 bits!
+		UCB0TXBUF = curCmd;
+	}
+	// this is the read interrupt handler
+	else if(!isWrInt)
+	{
+		// TODO: grab data from register
+		unsigned dataRead = UCB0RXBUF;
+	}
+	// increment sequence counter in preparation for the next interrupt
+	seqCtr++;
 }
 
 // I2C ISR

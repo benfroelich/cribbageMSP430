@@ -6,6 +6,7 @@
 
 // include to use standard types
 #include <stdint.h>
+#include "msp430.h"
 
 namespace IO
 {
@@ -13,10 +14,12 @@ namespace IO
 	{
 	public:
 		// used as bitmasks to check addresses
-		enum TRANSACTION_TYPE {
-			ADDR = 1<<8,
-			READ = 1<<9,
-			WRITE = 1<<10
+		enum CMD_TYPE {
+			ADDR_RD = 	1<<8,
+			ADDR_WR = 	1<<9,
+			DATA = 		1<<10,
+			START = 	1<<11,
+			STOP = 		1<<12
 		};
 		// maybe try this later to replace TRANSACTION_TYPE
 //		union I2C_TRANSACTION
@@ -51,9 +54,12 @@ namespace IO
 		inline void startSeq();
 	private:
 		// check the flag set in the data packet
-		inline bool isAddr(uint16_t seq)	{ return seq & ADDR; };
-		inline bool isWrite(uint16_t seq) 	{ return seq & WRITE; };
-		inline bool isRead(uint16_t seq) 	{ return seq & READ; };
+		inline bool isAddr(uint16_t seq)	{ return seq & (ADDR_WR | ADDR_RD); };
+		inline bool isWrAddr(uint16_t seq)  { return seq & ADDR_WR; };
+		inline bool isRdAddr(uint16_t seq)  { return seq & ADDR_RD; };
+		inline bool isData(uint16_t seq) 	{ return seq & DATA; };
+		// transmitter mode?
+		inline bool isTx()	{ return UCB0CTLW0 & UCTR; };
 		// start a write command (Coordinator-sender)
 		inline void startWr();
 		// start a read command (Coordinator-receiver)
@@ -66,12 +72,7 @@ namespace IO
 		// TODO: do I need this, or was this just for USI?
 		enum STATE {
 			IDLE = 0,
-			START = 2,
-			PREPARE_ACKNACK = 4,
-			HANDLE_RXTX = 6,
-			RECEIVED_DATA = 8,
-			PREPARE_STOP = 10,
-			STOP = 12
+			WORKING = 1
 		} state;
 		uint8_t defAddr;	// default I2C address
 		uint16_t *seq;
