@@ -17,7 +17,10 @@ Cribbage::Player::Player()
 	// set player ID to static player count and increment player count
 	this->pNum = numPlayers++;
 }
-Cribbage::DisplayDriver::DisplayDriver() : F_I2C(100e3)
+//////////// begin Cribbage::DisplayDriver
+Cribbage::DisplayDriver::DisplayDriver() :
+		F_I2C(100e3),
+		cathodeIt(0)
 {
 	// set up variables
 	this->initialized = false;
@@ -56,7 +59,7 @@ bool Cribbage::DisplayDriver::checkHW()
 }
 void Cribbage::DisplayDriver::clear()
 {
-	// set gpio expanders to all low or tri-state
+	// set gpio expanders to all low, all high, or all tri-state
 	for(unsigned int i=0; i<NUM_LEDS; i++) this->LEDStates[i] = false;
 }
 void Cribbage::DisplayDriver::clear(unsigned LED)
@@ -80,6 +83,41 @@ void Cribbage::DisplayDriver::disable()
 {
 	enabled = false;
 }
+void Cribbage::DisplayDriver::updateI2CCmd()
+{
+	/*
+	 	 - LED's are numbered 0->479 == D1->D480
+		 -calculate the LED to light up for a player:
+		 	 LEDStates[playeroffset+playerScore] = true;
+		 -only 1 cathode is on at a time. Filter the LEDs
+		 by requiring that they be in the range
+		    [cath*numAnodes, (1+cath)*numAnodes)
+		 that's how to translate LED -> anode/cathode.
+		 -The DrvMap_t struct contains the bank and bit for each driver.
+		 to translate anode and cathode to an I2C register value:
+		 	 drvBits[anodeToTurnOn.bank] |= 1 << anodeToTurnOn.ch
+		 -now all we have to do is write via I2C to the drivers:
+		 	 for each bank
+		 	 	 write <drvBits[bank]> to <baseAddr+bank>:
+		 -cycle through each cathode and enable the bits for it.
+	*/
+	// start
+	unsigned LEDOffset = cathodeIt*NUM_ANODES;
+	// clear drvBits array
+	for(unsigned i=0; i<NUM_LED_DRIVERS; i++) drvBits[i] = 0;
+	// write to the data bytes
+	for(unsigned anode = 0; anode < NUM_ANODES; anode++)
+	{
+		if(LEDStates[LEDOffset+anode])
+			drvBits[anodes[anode].bank] |= anodes[anode].ch;
+		else
+			drvBits[anodes[anode].bank] &= ~anodes[anode].ch;
+	}
+	// enable the cathode
+	drvBits[cathodes[cathodeIt].bank] = cathodes[cathodeIt].ch;
+	cathodeIt++; // increment the cathode iterator
+}
+//////////// begin Cribbage::UI
 Cribbage::UI::UI()
 {
 	this->pNum = 0;

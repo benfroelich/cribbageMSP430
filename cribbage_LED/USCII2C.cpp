@@ -27,9 +27,10 @@ void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 	assert(F_MCLK/F_I2C > 1);
 	UCB0BRW = F_MCLK/F_I2C;	// set I2C frequency
 	UCB0I2CSA = defaultAddress; 	// client address
+	//UCB0CTLW1 |= UCCLTO_3;	// timeout after ~34ms
 	UCB0CTLW0 &= ~UCSWRST; 	// put eUSCI_B in operational state
 	// enable TX interrupt and NACK interrupt
-	UCB0IE |= UCTXIE0 | UCNACKIE;
+	UCB0IE |= UCTXIE0 | UCNACKIE | UCRXIE0 /*| UCCLTOIE*/;
 }
 
 void IO::USCI_I2C::waitForBusFree() {
@@ -47,9 +48,10 @@ void IO::USCI_I2C::waitForBusFree() {
 	}
 }
 
-void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
+bool IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 		uint8_t *recvData, uint16_t wakeupSRBits)
 {
+	if(!done()) return false;
 	// we can't start another sequence until the current one is done
 	if(UCB0STAT & UCBBUSY)
 		// send a stop
@@ -70,6 +72,7 @@ void IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 	// start the sequence transmission, trigger, but don't set data yet
 	startSeq();
 	// exit and handle the transaction from interrupts
+	return true;
 }
 inline void IO::USCI_I2C::startWr()
 {
@@ -148,9 +151,11 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 		// this will set the UCTR flag appropriately and set the start bit
 		if(isWrAddr(curCmd)) 	startWr();
 		else 					startRd();
+		// addr - continue processing tx
+		curCmd = seq[++seqCtr];
 	}
 	// check for a data byte to TX/RX
-	else if(isWrInt)
+	if(isWrInt)
 	{
 		// write data from the sequence entry to the transmitter buffer
 	//	UCB0TXBUF = (uint8_t)curSeq; // causes intermittent data loss :o cmds get truncated to 8 bits!
@@ -179,6 +184,10 @@ __interrupt void EUSCI_B0(void)
 	case USCI_I2C_UCALIFG:   break;     // Vector 2: ALIFG
 	case USCI_I2C_UCNACKIFG:            // Vector 4: NACKIFG - client NACK'd
 		UCB0CTLW0 |= UCTXSTT;           // resend start and address
+		break;
+	case USCI_I2C_UCCLTOIFG:    		    // Interrupt Vector: I2C Mode: UCCLTOIFG
+		UCB0CTLW0 |= UCSWRST;
+		UCB0CTLW0 &= ~UCSWRST;
 		break;
 	case USCI_I2C_UCSTTIFG:  break;     // Vector 6: STTIFG
 	case USCI_I2C_UCSTPIFG:  break;     // Vector 8: STPIFG

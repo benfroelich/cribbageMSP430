@@ -21,7 +21,7 @@ namespace IO
 			START = 	1<<11,
 			STOP = 		1<<12
 		};
-		// maybe try this later to replace TRANSACTION_TYPE
+		// maybe try this later to replace CMD_TYPE
 //		union I2C_TRANSACTION
 //		{
 //			uint16_t packet;
@@ -38,8 +38,10 @@ namespace IO
 		void init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 				unsigned busyCnts = 0, volatile unsigned char *SEL_PORT = 0,
 				uint8_t PINS = 0);
-		//
-		void transaction(uint16_t *seq, uint16_t seqLen,
+		// initiate a transaction.
+		// return true if the transaction successfully started.
+		// return false if the bus is busy or an error occurred
+		bool transaction(uint16_t *seq, uint16_t seqLen,
 				uint8_t *recvData, uint16_t wakeupSRBits);
 		// Use this to check whether a previously scheduled I2C sequence has been
 		// fully processed.
@@ -65,11 +67,7 @@ namespace IO
 		// start a read command (Coordinator-receiver)
 		inline void startRd();
 		inline void waitForBusFree();
-
-		// used by the state machine
-		// set even values to each state to allow quick processing
-		// in ISR using the __even_in_range intrinsic
-		// TODO: do I need this, or was this just for USI?
+		// allow user to set values if the bus is idle
 		enum STATE {
 			IDLE = 0,
 			WORKING = 1

@@ -6,22 +6,7 @@ namespace Cribbage
 	 const int UI::playerOffset[Cribbage::MAX_PLAYERS] =
 	{0, 120, 240, 360};
 
-	/*
-	 calculate the LED to light up for a player:
-	 	 LEDStates[playeroffset+playerScore] = true;
-	 calculate the channels to iluminate for an LED as:
-		 anodeToTurnOn = anode[LED%numCathodes]
-		 cathodeToTurnOn = cathode[LED%numAnodes]
-	 that's how to translate LED -> anode/cathode.
-	 The DrvMap_t struct contains the bank and bit for each driver.
-	 to translate anode and cathode to an I2C register value:
-	 	 drvBits[anodeToTurnOn.bank] |= 1 << anodeToTurnOn.ch
-	 now all we have to do is write via I2C to the drivers:
-	 	 for each bank
-	 	 	 write <drvBits[bank]> to <baseAddr+bank>:
-	 TODO: regulating LED duty cycle and how many are on at a time
-	 	 	 to maintain even brightness
-	*/
+
 	// bank == I2C address
 	// channel == output channel of the driver
 	const UI::DisplayDriver::DrvMap_t UI::DisplayDriver::anodes[UI::DisplayDriver::NUM_ANODES] =

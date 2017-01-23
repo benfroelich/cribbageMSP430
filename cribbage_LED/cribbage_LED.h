@@ -89,9 +89,17 @@ namespace Cribbage
 		static const int NUM_LED_DRIVERS = 6;	// 6 LED drivers
 		// the base I2C address for the LED drivers
 		static const int BASE_I2C_ADDR = 0x40>>1;
-		// TODO: is numLEDsPerDriver needed?
-		static const int NUM_LEDS_PER_DRIVER = 8;	// 8 LED's per driver IC
-		void wrBitsISR();	// only call from ISR
+		// the command sequence to updat the LED's will require
+		// three commands per driver: ADDR, PTR, DATA
+		static const int SEQ_LEN = 3*NUM_LED_DRIVERS;
+		// TODO: is numLEDsPerDriver needed? implied by uint8_t?
+		// 8 LED's per driver IC
+		static const int NUM_LEDS_PER_DRIVER = 8;
+		// update the I2C command that will be sent to the drivers periodically
+		// for the persistence of vision LED matrix
+		void updateI2CCmd();
+		// only call from ISR to initiate the next I2C command
+		void wrBitsToDrvsInISR();
 		// LED data structures, static to allow access from ISR
 		typedef struct DrvMap_t
 		{
@@ -99,10 +107,13 @@ namespace Cribbage
 			char ch;	// IO expander channel that this LED pin is connected to
 		} DrvMap_t;
 		static const DrvMap_t anodes[NUM_ANODES], cathodes[NUM_CATHODES];
+		uint16_t driverCmd[SEQ_LEN];
 		char LEDStates[NUM_LEDS];
 		uint8_t drvBits[NUM_LED_DRIVERS];
 		bool enabled;
 		bool initialized;
+		// iterator across POV cathodes
+		unsigned cathodeIt;
 	};
 	// user interface class that controls the display
 	class UI: public DisplayDriver, public InputHandler

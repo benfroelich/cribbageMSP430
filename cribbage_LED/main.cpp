@@ -9,6 +9,7 @@
 // switch to turn off use of features on the launchpad
 // E.g. LED's and buttons on the launchpad
 #define LAUNCHPAD
+//#define USING_CTPL
 
 IO::InputPin
 		UP		(1, 1, 0, IO::PULLUP::UP),
@@ -51,23 +52,19 @@ int main(void)
     // TODO: remove, this is just for debugging I2C
     uint16_t dummyTransaction[] =
     {
-    		0x0040>>1 	| IO::USCI_I2C::ADDR_WR,	// set address
-    		0x0003 		| IO::USCI_I2C::DATA,		// set ptr to cfg reg
-    		0x00FF 		| IO::USCI_I2C::DATA,		// set all IOs as outputs
-			0x00BE		| IO::USCI_I2C::DATA,		// set all IOs as outputs
-//					      IO::USCI_I2C::START,		// repeated start
-			0x0040>>1	| IO::USCI_I2C::ADDR_WR,	// set address
-    		0x0001 		| IO::USCI_I2C::DATA,		// set ptr to output reg
-    		0x00AA 		| IO::USCI_I2C::DATA,		// write to output register
-
-//						  IO::USCI_I2C::START,		// repeated start
-			0x0046>>1 	| IO::USCI_I2C::ADDR_WR,	// set address
-			0x0003 		| IO::USCI_I2C::DATA,		// set ptr to cfg reg
-			0x00FF 		| IO::USCI_I2C::DATA,		// set all IOs as outputs
-//						  IO::USCI_I2C::START,		// repeated start
-			0x0046>>1	| IO::USCI_I2C::ADDR_WR,	// set address
+			0x0040>>1 	| IO::USCI_I2C::ADDR_WR,	// set address
 			0x0001 		| IO::USCI_I2C::DATA,		// set ptr to output reg
 			0x00AA 		| IO::USCI_I2C::DATA,		// write to output register
+			0x0040>>1	| IO::USCI_I2C::ADDR_WR,	// set address
+			0x0003 		| IO::USCI_I2C::DATA,		// set ptr to cfg reg
+			0x0000		| IO::USCI_I2C::DATA,		// set all IOs as outputs
+
+			0x0046>>1 	| IO::USCI_I2C::ADDR_WR,	// set address
+			0x0001 		| IO::USCI_I2C::DATA,		// set ptr to output reg
+			0x00AA 		| IO::USCI_I2C::DATA,		// write to output register
+			0x0046>>1	| IO::USCI_I2C::ADDR_WR,	// set address
+			0x0003 		| IO::USCI_I2C::DATA,		// set ptr to cfg reg
+			0x0000		| IO::USCI_I2C::DATA,		// set all IOs as outputs
     };
 	__enable_interrupt();
 	while(1)
@@ -76,6 +73,7 @@ int main(void)
 		if(UP.read())
 		{
 			P1OUT ^= BIT0;
+			dummyTransaction[2] ^= 0xFF;
 			IO::i2c.transaction(dummyTransaction, sizeof(dummyTransaction)/sizeof(dummyTransaction[0]), 0, 0);
 		}
 		if(DOWN.read())
@@ -131,6 +129,8 @@ void setUpPins(const double F_PIN_INTERRUPT)
 #endif
 }
 
+/// 2017-01-22: removed for ctpl library
+#ifndef USING_CTPL
 // disable WDT before any initialization takes place to prevent
 // WDT reset during initialization of memory
 int _system_pre_init(void)
@@ -138,6 +138,7 @@ int _system_pre_init(void)
   WDTCTL = WDTPW | WDTHOLD;
   return 1;
 }
+#endif
 
 // ISR's
 // Timer A0 interrupt service routine
