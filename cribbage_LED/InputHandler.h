@@ -1,19 +1,10 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
+#include <cassert>
 
 namespace IO
 {
-	const int NUM_PORTS = 4;
-	// define the a type for a pointer to an IO control register
-	typedef volatile unsigned char *const IO_REG;
-	// pin history data type used to store pin level for debouncing
-	//typedef unsigned pinHist_t;
-	typedef unsigned char pinHist_t;
-	struct PORTS_T
-	{
-		IO_REG sel, ren, in, dir, out;
-	};
-	extern PORTS_T PORTS[NUM_PORTS];
+	struct PORTS_T;
 	namespace PULLUP
 	{
 		enum PULLUP {UP, DOWN, OFF};	// type of pullup
@@ -37,7 +28,7 @@ namespace IO
 		// return the current debounced state of the pin
 		PINSTATE::PINSTATE read();
 		PORTS_T *reg;	// MSP specific, maybe move to a inheriting class?
-		int bm;	// bitmask for the pin == 1<<pin
+		int bm;	// bitmask == 1<<pin
 		// exit LMP when button press received
 		bool exitLPMOnPress(bool enable = true);	// TODO: implement
 		// call in the timer ISR
@@ -45,7 +36,7 @@ namespace IO
 	private:
 		void evaluate();			// evaluate the newly read state
 		bool polarity;				// active high or active low?
-		//	levels will be counted to to trigger an a state change
+		//	settings that will be counted to to trigger a state change
 		unsigned onCnt, offCnt, repCnt;
 		unsigned dbncCnts, repCnts;			// number of the same samples in active state
 		bool immState;				// non-debounced pin state read in interrupt
@@ -59,6 +50,14 @@ namespace IO
 		// handles press-and-hold
 		unsigned holdRepeat;
 		PULLUP::PULLUP pu;
+	public:
+		// function to update all input pins from a timer ISR
+		static void fromInterrupt();
+	private:
+		static InputPin *pins[7*8];
+		static unsigned numInputPins;
 	};
 };
+
+
 #endif

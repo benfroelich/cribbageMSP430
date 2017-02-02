@@ -1,12 +1,12 @@
 #include <msp430.h>
 #include <cassert>
+#include "IOHandler.h"
 #include "InputHandler.h"
 
-IO::PORTS_T IO::PORTS[4] = {
-		{&P1SEL0, &P1REN, &P1IN, &P1DIR, &P1OUT},
-		{&P2SEL0, &P2REN, &P2IN, &P2DIR, &P2OUT},
-		{&P3SEL0, &P3REN, &P3IN, &P3DIR, &P3OUT},
-		{&P4SEL0, &P4REN, &P4IN, &P4DIR, &P4OUT} };
+// define the input pins pointer registry
+IO::InputPin *IO::InputPin::pins[7*8] = {0};
+// initialize static number of input pins
+unsigned IO::InputPin::numInputPins = 0;
 
 IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLUP pull,
 		double tOn_ms, double tOff_ms, double tRepeat_ms, double tInt) :
@@ -28,6 +28,8 @@ IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLU
 	reg = &PORTS[port-1];
 	// setup pin bitmask
 	bm = 1<<pin;
+	// add input pin to the registry
+	pins[numInputPins++] = this;
 };
 IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLUP pull) :
 	port(port),
@@ -44,11 +46,13 @@ IO::InputPin::InputPin(unsigned port, unsigned pin, bool polarity, PULLUP::PULLU
 	reg = &PORTS[port-1];
 	// setup pin bitmask
 	bm = 1<<pin;
+	// add input pin to the registry
+	pins[numInputPins++] = this;
 };
 void IO::InputPin::init()
 {
 	// disable any special function on the pin
-	*(reg->sel) &= ~bm;
+	*(reg->sel0) &= ~bm;
 	// set direction to input
 	*(reg->dir) &= ~bm;
 	// set pullup
@@ -83,14 +87,15 @@ void IO::InputPin::init(double tOn_ms, double tOff_ms, double tRepeat_ms, double
 	assert(repCnt);
 	init();
 }
-void IO::InputPin::debounce()
+// implementation of inline functions
+inline void IO::InputPin::debounce()
 {
 	// read the current pin level (1/0) and convert to a state (ON/OFF)
 	immState = *reg->in & bm ? polarity : !polarity;
 	// store the level read
 	evaluate();
 }
-void IO::InputPin::evaluate()
+inline void IO::InputPin::evaluate()
 {
 	// evaluate the new state depending upon our current state
 	switch(state)
@@ -153,7 +158,14 @@ void IO::InputPin::evaluate()
 		assert(0);	// bad state
 	}
 }
-
+void IO::InputPin::fromInterrupt()
+{
+	// debounce all input pins
+	for (unsigned i = 0; i< numInputPins; i++)
+	{
+		pins[i]->debounce();
+	}
+}
 IO::PINSTATE::PINSTATE IO::InputPin::read()
 {
 	// store the current state of the pin

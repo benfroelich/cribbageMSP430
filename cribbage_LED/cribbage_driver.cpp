@@ -2,6 +2,7 @@
 #include "InputHandler.h"
 #include "USCII2C.h"
 #include "cribbage_LED.h"
+#include "timer.h"
 #include <cassert>
 #include <stdio.h>
 
@@ -20,7 +21,9 @@ Cribbage::Player::Player()
 //////////// begin Cribbage::DisplayDriver
 Cribbage::DisplayDriver::DisplayDriver() :
 		F_I2C(100e3),
-		cathodeIt(0)
+		F_POV(60),
+		cathodeIt(0),
+		newCmdReady(false)
 {
 	// set up variables
 	this->initialized = false;
@@ -29,8 +32,10 @@ Cribbage::DisplayDriver::DisplayDriver() :
 }
 void Cribbage::DisplayDriver::setupHW(double F_MCLK)
 {
-	// initialize the I2C driver to 100kHz
-	IO::i2c.init(F_MCLK, 100e3, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
+	// initialize the I2C driver
+	IO::i2c.init(F_MCLK, F_I2C, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
+	// create a timer to update the POV display:
+	timer_handle = timer_create(1000/F_POV, 1000/F_POV, updateLEDPOV_CB, this);
 	this->initialized = true;
 	checkHW();
 }
@@ -54,8 +59,6 @@ bool Cribbage::DisplayDriver::checkHW()
 					" driver %d - it's party time!\n", bank);
 	}
 	return stat;
-
-
 }
 void Cribbage::DisplayDriver::clear()
 {
@@ -83,6 +86,16 @@ void Cribbage::DisplayDriver::disable()
 {
 	enabled = false;
 }
+void Cribbage::updateLEDPOV_CB(void *arg)
+{
+	DisplayDriver * that = (DisplayDriver*)arg;
+	that->updateLEDMatrix(that);
+}
+void Cribbage::DisplayDriver::updateLEDMatrix(DisplayDriver * obj)
+{
+	obj->updateI2CCmd();
+	obj->wrCmdToDrvs();
+}
 void Cribbage::DisplayDriver::updateI2CCmd()
 {
 	/*
@@ -101,6 +114,8 @@ void Cribbage::DisplayDriver::updateI2CCmd()
 		 	 	 write <drvBits[bank]> to <baseAddr+bank>:
 		 -cycle through each cathode and enable the bits for it.
 	*/
+	// don't update anything if the most recent command has not been sent yet
+	if(newCmdReady) return;
 	// start
 	unsigned LEDOffset = cathodeIt*NUM_ANODES;
 	// clear drvBits array
@@ -115,7 +130,23 @@ void Cribbage::DisplayDriver::updateI2CCmd()
 	}
 	// enable the cathode
 	drvBits[cathodes[cathodeIt].bank] = cathodes[cathodeIt].ch;
-	cathodeIt++; // increment the cathode iterator
+	updateDrvCmd();	// translate the drvBits to the drvCmd;
+	newCmdReady = true;
+	cathodeIt = (cathodeIt + 1) % NUM_CATHODES; // increment the cathode iterator
+}
+void Cribbage::DisplayDriver::updateDrvCmd()
+{
+	for(unsigned cmd=0, data=0; cmd<=SEQ_LEN; cmd+=CMDS_PER_DRV, data++)
+	{
+		// only update the lower byte of the command, since the upper
+		// byte stores command type info
+		driverCmd[cmd] |= (uint8_t)drvBits[data];
+	}
+}
+void Cribbage::DisplayDriver::wrCmdToDrvs()
+{
+	// if the i2c bus is ready to take the transaction, update the newCmdReady variable
+	newCmdReady = !IO::i2c.transaction(driverCmd, SEQ_LEN, 0, 0);
 }
 //////////// begin Cribbage::UI
 Cribbage::UI::UI()
@@ -198,7 +229,7 @@ void Cribbage::Controller::run()
 	// update states
 	prevState = currState;
 	currState = nextState;
-	nextState = 0;	// current state must update next state or else!!!
+	nextState = 0;	// current state must update next state!
 }
 void Cribbage::Controller::enter()
 {

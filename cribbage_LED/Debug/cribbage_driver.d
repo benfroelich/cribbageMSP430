@@ -7,9 +7,6 @@ cribbage_driver.obj: /Applications/ti/ccsv6/ccs_base/msp430/include/in430.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h
 cribbage_driver.obj: ../InputHandler.h
-cribbage_driver.obj: ../USCII2C.h
-cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h
-cribbage_driver.obj: ../cribbage_LED.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h
@@ -26,6 +23,16 @@ cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/in
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h
+cribbage_driver.obj: ../USCII2C.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h
+cribbage_driver.obj: ../cribbage_LED.h
+cribbage_driver.obj: ../timer.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h
+cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdio.h
 cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdarg.h
 
@@ -36,9 +43,6 @@ cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/in
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/intrinsics_legacy_undefs.h: 
 ../InputHandler.h: 
-../USCII2C.h: 
-/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h: 
-../cribbage_LED.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h: 
@@ -52,6 +56,16 @@ cribbage_driver.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/in
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/linkage.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s_c_stl_confix.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s_d__debug.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h: 
+../USCII2C.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/stdint.h: 
+../cribbage_LED.h: 
+../timer.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h: 

@@ -62,10 +62,7 @@ namespace Cribbage
 	IO::InputPin * RIGHT;
 	IO::InputPin * BACK;
 	IO::InputPin * ENTER;
-	class InputHandler // TODO: : public IO
-	{
-	public:
-	};
+
 	// this display driver uses the I2C library to control the driver matrix
 	class DisplayDriver
 	{
@@ -79,9 +76,13 @@ namespace Cribbage
 		void ctrl(unsigned LED, bool on);
 		void enable();	// enable the matrix
 		void disable();	// disable the matrix
+		/// called from timer to update the POV matrix
+		void updateLEDMatrix(DisplayDriver *obj);
 	private:
-		// constants
+		// I2C frequency
 		const double F_I2C;
+		/// persistance of vision update frequency in Hz
+		const double F_POV;
 		// 24 anode x 20 cathode matrix driven by IO expanders
 		static const int NUM_ANODES = 24;
 		static const int NUM_CATHODES = 20;
@@ -91,7 +92,8 @@ namespace Cribbage
 		static const int BASE_I2C_ADDR = 0x40>>1;
 		// the command sequence to updat the LED's will require
 		// three commands per driver: ADDR, PTR, DATA
-		static const int SEQ_LEN = 3*NUM_LED_DRIVERS;
+		static const int CMDS_PER_DRV = 3;
+		static const int SEQ_LEN = CMDS_PER_DRV*NUM_LED_DRIVERS;
 		// TODO: is numLEDsPerDriver needed? implied by uint8_t?
 		// 8 LED's per driver IC
 		static const int NUM_LEDS_PER_DRIVER = 8;
@@ -99,8 +101,10 @@ namespace Cribbage
 		// for the persistence of vision LED matrix
 		void updateI2CCmd();
 		// only call from ISR to initiate the next I2C command
-		void wrBitsToDrvsInISR();
-		// LED data structures, static to allow access from ISR
+		void wrCmdToDrvs();
+		// translate the drvBits -> drvCmd
+		void updateDrvCmd();
+		// LED data structures
 		typedef struct DrvMap_t
 		{
 			char bank;	// IO expander that this LED pin is connected to
@@ -110,13 +114,20 @@ namespace Cribbage
 		uint16_t driverCmd[SEQ_LEN];
 		char LEDStates[NUM_LEDS];
 		uint8_t drvBits[NUM_LED_DRIVERS];
+		// flag between driver I2C sequence writer and transmitter to signal
+		// when an new transmission is ready
+		bool newCmdReady;
 		bool enabled;
 		bool initialized;
 		// iterator across POV cathodes
 		unsigned cathodeIt;
+		// store the timer handle
+		int timer_handle;
 	};
+	void updateLEDPOV_CB(void * arg);
+
 	// user interface class that controls the display
-	class UI: public DisplayDriver, public InputHandler
+	class UI: public DisplayDriver
 	{
 	public:
 		UI();

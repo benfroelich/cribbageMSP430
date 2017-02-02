@@ -13,7 +13,7 @@ namespace IO
 	class USCI_I2C
 	{
 	public:
-		// used as bitmasks to check addresses
+		// used as bitmasks to define what type of command is being executed
 		enum CMD_TYPE {
 			ADDR_RD = 	1<<8,
 			ADDR_WR = 	1<<9,

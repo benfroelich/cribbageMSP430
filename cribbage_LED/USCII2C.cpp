@@ -49,7 +49,7 @@ void IO::USCI_I2C::waitForBusFree() {
 }
 
 bool IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
-		uint8_t *recvData, uint16_t wakeupSRBits)
+		uint8_t *recvData = NULL, uint16_t wakeupSRBits = 0)
 {
 	if(!done()) return false;
 	// we can't start another sequence until the current one is done

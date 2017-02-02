@@ -22,7 +22,14 @@ InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/inclu
 InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h
 InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h
 InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h
+InputHandler.obj: ../IOHandler.h
 InputHandler.obj: ../InputHandler.h
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h
+InputHandler.obj: /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h
 
 ../InputHandler.cpp: 
 /Applications/ti/ccsv6/ccs_base/msp430/include/msp430.h: 
@@ -46,4 +53,11 @@ InputHandler.obj: ../InputHandler.h
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h: 
 /Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h: 
+../IOHandler.h: 
 ../InputHandler.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/cassert: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__prolog.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__cprolog.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/assert.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__epilog.h: 
+/Applications/ti/ccsv6/tools/compiler/msp430_15.12.3.LTS/include/s__config_compat_post.h: 
