@@ -14,22 +14,36 @@ namespace IO
 
 namespace Cribbage
 {
+	/** Cribbage constants based on the game's rules	 */
 	const unsigned MAX_PLAYERS = 4;
 	const unsigned MIN_PLAYERS = 2;
 	const unsigned MAX_TURNS = 120;
 	class State;
 	class Controller;
+	/**
+	 * 	\brief 		Handles player attributes
+	 * 	\details 	This class stores and maintains player-related status data, such as the
+	 * 				player's number, their score, and the total number of players.
+	 */
 	class Player
 	{
 	public:
 		Player();
+		void addPts(int pts) { if(pts >= -1*score) score += pts; };
+		unsigned getPts() { return score; };
+		void setPts(unsigned pts) {score = pts};
 		//Player* next();
 	private:
 		unsigned score;	// player's current score
 		char pNum;	// unique player ID number
 		static char numPlayers;
 	};
-
+	/**
+	 * 	\brief 		captures the action of a turn
+	 * 	\details 	This class stores and maintains data about a turn so the
+	 * 				system can implement an undo function. It's forms the elements
+	 * 				of a pseudo undo stack.
+	 */
 	class Turn
 	{
 	public:
@@ -38,6 +52,11 @@ namespace Cribbage
 		Player* plr;
 		unsigned score;
 	};
+	/**
+	 * 	\brief 		maintains the game's history
+	 * 	\details 	Keeps a stack of the turns that have occured and implements
+	 * 				an undo/redo stack. Also provides for game replay.
+	 */
 	class Queue
 	{
 		Queue();
@@ -48,6 +67,11 @@ namespace Cribbage
 		unsigned currTurn;
 		Turn turns[MAX_TURNS*MAX_PLAYERS]; // allocate space for a command history
 	};
+	/**
+	 * 	\brief 		Game sequence state abstract class
+	 * 	\details 	Used as a base class for the states in the FSM. Allows specialization
+	 * 				of the states while standardizing their interface
+	 */
 	class State
 	{
 	public:
@@ -63,7 +87,13 @@ namespace Cribbage
 	IO::InputPin * BACK;
 	IO::InputPin * ENTER;
 
-	// this display driver uses the I2C library to control the driver matrix
+	/**
+	 * 	\brief 		controls the driver matrix
+	 * 	\details 	this driver control the LED persistence-of-vision matrix
+	 * 				via I2C. It strobes the LED's at a fixed frequency by
+	 * 				enabling each appropriate anode for a cathode and
+	 * 				then turning the cathode on.
+	 */
 	class DisplayDriver
 	{
 	public:
@@ -154,6 +184,8 @@ namespace Cribbage
 		virtual void enter(Controller& ctrlr);
 		virtual State* handleInput(Controller& ctrlr);
 		virtual void update(Controller& ctrlr);
+	private:
+		unsigned curPlrNum;	// current player reference number
 	};
 	class Controller
 	{

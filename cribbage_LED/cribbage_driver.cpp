@@ -34,7 +34,7 @@ void Cribbage::DisplayDriver::setupHW(double F_MCLK)
 {
 	// initialize the I2C driver
 	IO::i2c.init(F_MCLK, F_I2C, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
-	// create a timer to update the POV display:
+	// create a timer to update the POV display
 	timer_handle = timer_create(1000/F_POV, 1000/F_POV, updateLEDPOV_CB, this);
 	this->initialized = true;
 	checkHW();
@@ -247,10 +247,24 @@ void Cribbage::Controller::update()
 }
 void Cribbage::Turns::enter(Controller& ctrlr)
 {
-	// errrrm do nothing fer now
+	// start at the first player
+	curPlrNum = 0;
+	for(unsigned i=0; i<ctrlr.numPlayersChosen; i++)
+	{
+		ctrlr.players[i]->setPts(0);
+	}
 }
 Cribbage::State *Cribbage::Turns::handleInput(Controller& ctrlr)
 {
+	// capture current inputs
+	if(RIGHT->read())
+	{
+		curPlrNum = (curPlrNum + 1) % ctrlr.numPlayersChosen;
+	}
+	if(LEFT->read())
+	{
+		curPlrNum = (curPlrNum - 1) % ctrlr.numPlayersChosen;
+	}
 	return &ctrlr.turns;
 }
 void Cribbage::Turns::update(Controller& ctrlr)
