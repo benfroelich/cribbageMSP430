@@ -9,9 +9,12 @@
 #include <stdint.h>
 // switch to turn off use of features on the launchpad
 // E.g. LED's and buttons on the launchpad
-#define LAUNCHPAD
+//#define LAUNCHPAD
 //#define USING_CTPL
 
+#ifdef LAUNCHPAD
+// connect inputs to the two buttons on the cribbage board and also some other
+// unused pins
 IO::InputPin
 		UP		(1, 1, 0, IO::PULLUP::UP),
 		DOWN	(4, 5, 0, IO::PULLUP::UP),
@@ -19,6 +22,16 @@ IO::InputPin
 		LEFT	(1, 3, 0, IO::PULLUP::UP),
 		BACK	(1, 4, 0, IO::PULLUP::UP),
 		ENTER	(1, 5, 0, IO::PULLUP::UP);
+#else
+// connect inputs to the cribbage controller input buttons
+IO::InputPin
+		UP		(2, 2, 0, IO::PULLUP::UP),
+		DOWN	(2, 3, 0, IO::PULLUP::UP),
+		RIGHT	(2, 4, 0, IO::PULLUP::UP),
+		LEFT	(2, 5, 0, IO::PULLUP::UP),
+		BACK	(2, 6, 0, IO::PULLUP::UP),
+		ENTER	(2, 7, 0, IO::PULLUP::UP);
+#endif
 
 // local function declarations
 void setUpTimers(const double F_CLK, const double F_PIN_INTERRUPT);
@@ -29,7 +42,7 @@ int main(void)
 	Cribbage::Controller game;
 	const unsigned F_PIN_INTERRUPT = 500; // pin interrupt frequency [Hz]
 	const unsigned F_ACLK = 10e3;
-	const double F_MCLK = 8e6;			// desired MCLK frequency [Hz]
+	const uint32_t F_MCLK = 8e6;			// desired MCLK frequency [Hz]
 
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
@@ -50,6 +63,7 @@ int main(void)
 
     // setup and check HW:
     game.sysInit(F_MCLK);
+#ifdef LAUNCHPAD
 
     // TODO: remove, this is just for debugging I2C
     uint16_t dummyTransaction[] =
@@ -68,7 +82,8 @@ int main(void)
 			0x03 		| IO::USCI_I2C::DATA,		// set ptr to cfg reg
 			0x00		| IO::USCI_I2C::DATA,		// set all IOs as outputs
     };
-	__enable_interrupt();
+#endif
+    __enable_interrupt();
 	while(1)
 	{
 #ifdef LAUNCHPAD
@@ -159,12 +174,6 @@ __interrupt void Timer_A (void)
 	if(TA0IV & TA0IV_TAIFG)
 	{
 		IO::InputPin::fromInterrupt();
-//		UP.debounce();
-//		DOWN.debounce();
-//		RIGHT.debounce();
-//		LEFT.debounce();
-//		BACK.debounce();
-//		ENTER.debounce();
 	}
 	i2cCtr++;
     __bic_SR_register_on_exit(LPM0_bits); // Exit LPM0

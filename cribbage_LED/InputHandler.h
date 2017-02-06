@@ -54,7 +54,8 @@ namespace IO
 		// function to update all input pins from a timer ISR
 		static void fromInterrupt();
 	private:
-		static InputPin *pins[7*8];
+		// allocate enough storage
+		static InputPin *pins[7];
 		static unsigned numInputPins;
 	};
 };

@@ -35,7 +35,7 @@ namespace IO
 		// currently just use MCLK as the clock source
 		// busy counts will prevent an infinite loop if the bus becomes permanently busy
 		// set to -1 to disable.
-		void init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
+		void init(uint32_t F_MCLKusci, uint32_t F_I2C, uint8_t defaultAddress,
 				unsigned busyCnts = 0, volatile unsigned char *SEL_PORT = 0,
 				uint8_t PINS = 0);
 		// initiate a transaction.

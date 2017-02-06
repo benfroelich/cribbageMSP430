@@ -12,7 +12,7 @@ IO::USCI_I2C::USCI_I2C()
 {
 	this->state = IDLE;
 }
-void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
+void IO::USCI_I2C::init(const uint32_t F_MCLKusci, const uint32_t F_I2C, uint8_t defaultAddress,
 		unsigned busyCnts, volatile unsigned char *SEL_PORT, uint8_t PINS)
 {
 	this->busyCnts = busyCnts;
@@ -24,8 +24,10 @@ void IO::USCI_I2C::init(double F_MCLK, double F_I2C, uint8_t defaultAddress,
 	UCB0CTLW0 = UCSWRST;
 	// use SMCLK as clock source, I2C Mode, send I2C stop
 	UCB0CTLW0 |= UCMODE_3 | UCMST | UCSSEL__SMCLK;
-	assert(F_MCLK/F_I2C > 1);
-	UCB0BRW = F_MCLK/F_I2C;	// set I2C frequency
+	//assert(F_MCLK/F_I2C > 1);
+	// TODO: solve stack overflow :(
+	// UCB0BRW = (uint16_t)F_MCLKusci/F_I2C;	// set I2C frequency
+	UCB0BRW = (uint16_t)(8000000/F_I2C);	// set I2C frequency
 	UCB0I2CSA = defaultAddress; 	// client address
 	//UCB0CTLW1 |= UCCLTO_3;	// timeout after ~34ms
 	UCB0CTLW0 &= ~UCSWRST; 	// put eUSCI_B in operational state

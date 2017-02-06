@@ -4,7 +4,7 @@
 #include "InputHandler.h"
 
 // define the input pins pointer registry
-IO::InputPin *IO::InputPin::pins[7*8] = {0};
+IO::InputPin *IO::InputPin::pins[7] = {0};
 // initialize static number of input pins
 unsigned IO::InputPin::numInputPins = 0;
 

@@ -29,9 +29,11 @@ namespace Cribbage
 	{
 	public:
 		Player();
+		/** \brief add points to the players score
+		 *  \details make sure it doesn't undeflow*/
 		void addPts(int pts) { if(pts >= -1*score) score += pts; };
 		unsigned getPts() { return score; };
-		void setPts(unsigned pts) {score = pts};
+		void setPts(unsigned pts) {score = pts; };
 		//Player* next();
 	private:
 		unsigned score;	// player's current score
@@ -98,7 +100,7 @@ namespace Cribbage
 	{
 	public:
 		DisplayDriver();
-		void setupHW(double F_MCLK = 8e6);	// setup I2C
+		void setupHW(const uint32_t F_MCLKhw = 8e6);	// setup I2C
 		bool checkHW();
 		void clear();
 		void clear(unsigned LED);
@@ -110,9 +112,9 @@ namespace Cribbage
 		void updateLEDMatrix(DisplayDriver *obj);
 	private:
 		// I2C frequency
-		const double F_I2C;
+		const uint32_t F_I2C;
 		/// persistance of vision update frequency in Hz
-		const double F_POV;
+		const uint32_t F_POV;
 		// 24 anode x 20 cathode matrix driven by IO expanders
 		static const int NUM_ANODES = 24;
 		static const int NUM_CATHODES = 20;
@@ -192,7 +194,7 @@ namespace Cribbage
 	public:
 		Controller();
 		// init driver, game status, and hardware
-		void sysInit(double F_MCLK);
+		void sysInit(const uint32_t F_MCLKsys);
 		void run();	// run a pass of the state machine
 		virtual void enter();
 		// figure out what the next state will be

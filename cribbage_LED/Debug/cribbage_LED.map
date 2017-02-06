@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker Unix v15.12.3                  
 ******************************************************************************
->> Linked Thu Feb  2 21:15:09 2017
+>> Linked Sun Feb  5 22:58:56 2017
 
 OUTPUT FILE NAME:   <cribbage_LED.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs_mpu"  address: 00004dc4
@@ -18,8 +18,8 @@ MEMORY CONFIGURATION
   INFOC                 00001880   00000080  00000000  00000080  RWIX
   INFOB                 00001900   00000080  00000000  00000080  RWIX
   INFOA                 00001980   00000080  00000000  00000080  RWIX
-  RAM                   00001c00   00000800  00000549  000002b7  RWIX
-  FRAM                  00004400   0000bb80  00001084  0000aafc  RWIX
+  RAM                   00001c00   00000800  000004e5  0000031b  RWIX
+  FRAM                  00004400   0000bb80  0000107c  0000ab04  RWIX
   JTAGSIGNATURE         0000ff80   00000004  00000004  00000000  RWIX  ffff 
   BSLSIGNATURE          0000ff84   00000004  00000004  00000000  RWIX  ffff 
   IPESIGNATURE          0000ff88   00000008  00000008  00000000  RWIX  ffff 
@@ -79,7 +79,7 @@ MEMORY CONFIGURATION
   INT53                 0000fffa   00000002  00000002  00000000  RWIX
   INT54                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FRAM2                 00010000   00004000  000037e2  0000081e  RWIX
+  FRAM2                 00010000   00004000  00003618  000009e8  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -87,24 +87,6 @@ SECTION ALLOCATION MAP
  output                                  attributes/
 section   page    origin      length       input sections
 --------  ----  ----------  ----------   ----------------
-.data      0    00001c00    00000283     UNINITIALIZED
-                  00001c00    000000e0     InputHandler.obj (.data:_ZN2IO8InputPin4pinsE)
-                  00001ce0    000000c8     rts430x_lc_rd_eabi.lib : defs.obj (.data:_ftable)
-                  00001da8    00000078                            : lowlev.obj (.data:_device)
-                  00001e20    0000003c                            : lowlev.obj (.data:_stream)
-                  00001e5c    00000008     timer.obj (.data)
-                  00001e64    00000004     rts430x_lc_rd_eabi.lib : exit_gvars.obj (.data:__TI_cleanup_ptr)
-                  00001e68    00000004                            : exit_gvars.obj (.data:__TI_dtors_ptr)
-                  00001e6c    00000004                            : _lock.obj (.data:_lock)
-                  00001e70    00000004                            : _lock.obj (.data:_unlock)
-                  00001e74    00000004                            : vars.obj (.data)
-                  00001e78    00000002     InputHandler.obj (.data)
-                  00001e7a    00000002     main.obj (.data)
-                  00001e7c    00000002     rts430x_lc_rd_eabi.lib : defs.obj (.data)
-                  00001e7e    00000002                            : exit.obj (.data)
-                  00001e80    00000002                            : memory.obj (.data)
-                  00001e82    00000001     cribbage_driver.obj (.data)
-
 .TI.persistent 
 *          0    00004400    00000000     UNINITIALIZED
 
@@ -129,13 +111,13 @@ section   page    origin      length       input sections
 .ipe_vars 
 *          0    00004c00    00000000     UNINITIALIZED
 
-.cinit     0    00005402    00000082     
-                  00005402    0000005d     (.cinit..data.load) [load image, compression = rle]
-                  0000545f    00000001     --HOLE-- [fill = 0]
-                  00005460    0000000b     (.cinit..bss.load) [load image, compression = rle]
-                  0000546b    00000001     --HOLE-- [fill = 0]
-                  0000546c    00000008     (__TI_handler_table)
-                  00005474    00000010     (__TI_cinit_table)
+.cinit     0    000053a6    000000d6     
+                  000053a6    000000b1     (.cinit..data.load) [load image, compression = rle]
+                  00005457    00000001     --HOLE-- [fill = 0]
+                  00005458    0000000b     (.cinit..bss.load) [load image, compression = rle]
+                  00005463    00000001     --HOLE-- [fill = 0]
+                  00005464    00000008     (__TI_handler_table)
+                  0000546c    00000010     (__TI_cinit_table)
 
 .binit     0    00004400    00000000     
 
@@ -153,25 +135,44 @@ section   page    origin      length       input sections
                   00004e00    00000018     timer.obj (.text:_isr:_Z15timer1_taiv_isrv)
                   00004e18    00000008     rts430x_lc_rd_eabi.lib : isr_trap.obj (.text:_isr:__TI_ISR_TRAP)
 
-.bss       0    00001e84    00000226     UNINITIALIZED
-                  00001e84    000000a0     (.common:__TI_tmpnams)
-                  00001f24    00000078     timer.obj (.bss:_timer)
-                  00001f9c    00000020     main.obj (.bss:BACK)
-                  00001fbc    00000020     main.obj (.bss:DOWN)
-                  00001fdc    00000020     main.obj (.bss:ENTER)
-                  00001ffc    00000020     main.obj (.bss:LEFT)
-                  0000201c    00000020     main.obj (.bss:RIGHT)
-                  0000203c    00000020     main.obj (.bss:UP)
-                  0000205c    00000014     cribbage_driver.obj (.bss:_ZN2IO3i2cE)
-                  00002070    00000010     cribbage_driver.obj (.bss:players_g)
-                  00002080    0000000a     rts430x_lc_rd_eabi.lib : memory.obj (.bss)
-                  0000208a    00000008                            : trgdrv.obj (.bss:parmbuf)
-                  00002092    00000004     (.common:_ZN8Cribbage2UPE)
-                  00002096    00000004     (.common:_ZN8Cribbage4BACKE)
-                  0000209a    00000004     (.common:_ZN8Cribbage4DOWNE)
-                  0000209e    00000004     (.common:_ZN8Cribbage4LEFTE)
-                  000020a2    00000004     (.common:_ZN8Cribbage5ENTERE)
-                  000020a6    00000004     (.common:_ZN8Cribbage5RIGHTE)
+.bss       0    00001c00    00000226     UNINITIALIZED
+                  00001c00    000000a0     (.common:__TI_tmpnams)
+                  00001ca0    00000078     timer.obj (.bss:_timer)
+                  00001d18    00000020     main.obj (.bss:BACK)
+                  00001d38    00000020     main.obj (.bss:DOWN)
+                  00001d58    00000020     main.obj (.bss:ENTER)
+                  00001d78    00000020     main.obj (.bss:LEFT)
+                  00001d98    00000020     main.obj (.bss:RIGHT)
+                  00001db8    00000020     main.obj (.bss:UP)
+                  00001dd8    00000014     cribbage_driver.obj (.bss:_ZN2IO3i2cE)
+                  00001dec    00000010     cribbage_driver.obj (.bss:players_g)
+                  00001dfc    0000000a     rts430x_lc_rd_eabi.lib : memory.obj (.bss)
+                  00001e06    00000008                            : trgdrv.obj (.bss:parmbuf)
+                  00001e0e    00000004     (.common:_ZN8Cribbage2UPE)
+                  00001e12    00000004     (.common:_ZN8Cribbage4BACKE)
+                  00001e16    00000004     (.common:_ZN8Cribbage4DOWNE)
+                  00001e1a    00000004     (.common:_ZN8Cribbage4LEFTE)
+                  00001e1e    00000004     (.common:_ZN8Cribbage5ENTERE)
+                  00001e22    00000004     (.common:_ZN8Cribbage5RIGHTE)
+
+.data      0    00001e26    0000021f     UNINITIALIZED
+                  00001e26    000000c8     rts430x_lc_rd_eabi.lib : defs.obj (.data:_ftable)
+                  00001eee    00000078                            : lowlev.obj (.data:_device)
+                  00001f66    00000060     IOHandler.obj (.data:_ZN2IO5PORTSE)
+                  00001fc6    0000003c     rts430x_lc_rd_eabi.lib : lowlev.obj (.data:_stream)
+                  00002002    0000001c     InputHandler.obj (.data:_ZN2IO8InputPin4pinsE)
+                  0000201e    00000008     timer.obj (.data)
+                  00002026    00000004     rts430x_lc_rd_eabi.lib : exit_gvars.obj (.data:__TI_cleanup_ptr)
+                  0000202a    00000004                            : exit_gvars.obj (.data:__TI_dtors_ptr)
+                  0000202e    00000004                            : _lock.obj (.data:_lock)
+                  00002032    00000004                            : _lock.obj (.data:_unlock)
+                  00002036    00000004                            : vars.obj (.data)
+                  0000203a    00000002     InputHandler.obj (.data)
+                  0000203c    00000002     main.obj (.data)
+                  0000203e    00000002     rts430x_lc_rd_eabi.lib : defs.obj (.data)
+                  00002040    00000002                            : exit.obj (.data)
+                  00002042    00000002                            : memory.obj (.data)
+                  00002044    00000001     cribbage_driver.obj (.data)
 
 .stack     0    00002360    000000a0     UNINITIALIZED
                   00002360    00000004     rts430x_lc_rd_eabi.lib : boot.obj (.stack)
@@ -274,195 +275,193 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.const     0    00004e28    000005da     
+.const     0    00004e28    0000057e     
                   00004e28    00000162     InputHandler.obj (.const:.string)
                   00004f8a    00000116     cribbage_driver.obj (.const:.string)
-                  000050a0    000000b6     USCII2C.obj (.const:.string)
-                  00005156    0000003b     InputHandler.obj (.const:.string:_ZZN2IO8InputPin8evaluateEvEs)
-                  00005191    00000001     --HOLE-- [fill = 0]
-                  00005192    0000003a     timer.obj (.const:.string)
-                  000051cc    00000035     USCII2C.obj (.const:.string:_ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0)
-                  00005201    00000001     --HOLE-- [fill = 0]
-                  00005202    00000030     CribbageConsts.obj (.const:_ZN8Cribbage13DisplayDriver6anodesE)
-                  00005232    00000028     CribbageConsts.obj (.const:_ZN8Cribbage13DisplayDriver8cathodesE)
-                  0000525a    00000025     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
-                  0000527f    00000001     --HOLE-- [fill = 0]
-                  00005280    00000022                            : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
-                  000052a2    00000018     main.obj (.const:$P$T0$1)
-                  000052ba    00000018     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage10ControllerE)
-                  000052d2    00000016     USCII2C.obj (.const:.string:_ZZN2IO8USCI_I2C14waitForBusFreeEvEs)
-                  000052e8    00000014     rts430x_lc_rd_eabi.lib : _printfi_min.obj (.const:.string)
-                  000052fc    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage10ControllerE)
-                  00005310    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage4InitE)
-                  00005324    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage5StateE)
-                  00005338    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage5TurnsE)
-                  0000534c    00000012     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage5StateE)
-                  0000535e    00000012     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage5TurnsE)
-                  00005370    00000011     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage4InitE)
-                  00005381    00000001     --HOLE-- [fill = 0]
-                  00005382    00000010     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
-                  00005392    00000010                            : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
-                  000053a2    0000000d                            : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
-                  000053af    00000001     --HOLE-- [fill = 0]
-                  000053b0    0000000c                            : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
-                  000053bc    0000000c                            : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
-                  000053c8    0000000c     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage4InitE)
-                  000053d4    0000000c     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage5TurnsE)
-                  000053e0    00000008     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage10ControllerE)
-                  000053e8    00000008     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage5StateE)
-                  000053f0    00000008     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
-                  000053f8    00000008     CribbageConsts.obj (.const:_ZN8Cribbage2UI12playerOffsetE)
-                  00005400    00000002     IOHandler.obj (.const)
+                  000050a0    00000072     USCII2C.obj (.const:.string)
+                  00005112    0000003b     InputHandler.obj (.const:.string:_ZZN2IO8InputPin8evaluateEvEs)
+                  0000514d    00000001     --HOLE-- [fill = 0]
+                  0000514e    0000003a     timer.obj (.const:.string)
+                  00005188    00000035     USCII2C.obj (.const:.string:_ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0)
+                  000051bd    00000001     --HOLE-- [fill = 0]
+                  000051be    00000030     CribbageConsts.obj (.const:_ZN8Cribbage13DisplayDriver6anodesE)
+                  000051ee    00000028     CribbageConsts.obj (.const:_ZN8Cribbage13DisplayDriver8cathodesE)
+                  00005216    00000025     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv120__si_class_type_infoE)
+                  0000523b    00000001     --HOLE-- [fill = 0]
+                  0000523c    00000022                            : typeinfo_.obj (.const:.typeinfo:_ZTSN10__cxxabiv117__class_type_infoE)
+                  0000525e    00000018     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage10ControllerE)
+                  00005276    00000016     USCII2C.obj (.const:.string:_ZZN2IO8USCI_I2C14waitForBusFreeEvEs)
+                  0000528c    00000014     rts430x_lc_rd_eabi.lib : _printfi_min.obj (.const:.string)
+                  000052a0    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage10ControllerE)
+                  000052b4    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage4InitE)
+                  000052c8    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage5StateE)
+                  000052dc    00000014     cribbage_driver.obj (.const:_ZTVN8Cribbage5TurnsE)
+                  000052f0    00000012     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage5StateE)
+                  00005302    00000012     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage5TurnsE)
+                  00005314    00000011     cribbage_driver.obj (.const:.typeinfo:_ZTSN8Cribbage4InitE)
+                  00005325    00000001     --HOLE-- [fill = 0]
+                  00005326    00000010     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:_ZTVN10__cxxabiv117__class_type_infoE)
+                  00005336    00000010                            : typeinfo_.obj (.const:_ZTVN10__cxxabiv120__si_class_type_infoE)
+                  00005346    0000000d                            : typeinfo_.obj (.const:.typeinfo:_ZTSSt9type_info)
+                  00005353    00000001     --HOLE-- [fill = 0]
+                  00005354    0000000c                            : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv117__class_type_infoE)
+                  00005360    0000000c                            : typeinfo_.obj (.const:.typeinfo:_ZTIN10__cxxabiv120__si_class_type_infoE)
+                  0000536c    0000000c     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage4InitE)
+                  00005378    0000000c     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage5TurnsE)
+                  00005384    00000008     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage10ControllerE)
+                  0000538c    00000008     cribbage_driver.obj (.const:.typeinfo:_ZTIN8Cribbage5StateE)
+                  00005394    00000008     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.const:.typeinfo:_ZTISt9type_info)
+                  0000539c    00000008     CribbageConsts.obj (.const:_ZN8Cribbage2UI12playerOffsetE)
+                  000053a4    00000002     IOHandler.obj (.const)
 
-.text      0    00010000    000037e2     
+.text      0    00010000    00003618     
                   00010000    00000486     rts430x_lc_rd_eabi.lib : frcdivd.obj (.text:__TI_frcdivd)
                   00010486    000002e4                            : frcmpyd.obj (.text:__TI_frcmpyd)
                   0001076a    000002d8                            : addd.obj (.text:__mspabi_addd)
                   00010a42    00000282                            : mpyd.obj (.text:__mspabi_mpyd)
                   00010cc4    00000252                            : frcaddd.obj (.text:__TI_frcaddd)
-                  00010f16    0000024a     main.obj (.text:_Z9setUpPinsd)
-                  00011160    00000222     rts430x_lc_rd_eabi.lib : divd.obj (.text:__mspabi_divd)
-                  00011382    00000132                            : _printfi_min.obj (.text:_setfield)
-                  000114b4    000000f8     main.obj (.text:main)
-                  000115ac    000000f2     InputHandler.obj (.text:_ZN2IO8InputPin4initEdddd)
-                  0001169e    000000f0     rts430x_lc_rd_eabi.lib : fputs.obj (.text:fputs)
-                  0001178e    000000e8     InputHandler.obj (.text:_ZN2IO8InputPin13fromInterruptEv)
-                  00011876    000000e0     rts430x_lc_rd_eabi.lib : setvbuf.obj (.text:setvbuf)
-                  00011956    000000d8                            : cmpd.obj (.text:__mspabi_cmpd)
-                  00011a2e    000000d8                            : _printfi_min.obj (.text:_pproc_diouxp)
-                  00011b06    000000d2                            : _printfi_min.obj (.text:__TI_printfi_minimal)
-                  00011bd8    000000ca     USCII2C.obj (.text:_ZN2IO8USCI_I2C11transactionEPjjPhj)
-                  00011ca2    000000ca     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver12updateI2CCmdEv)
-                  00011d6c    000000c6     USCII2C.obj (.text:_ZN2IO8USCI_I2C4initEddhjPVhh)
-                  00011e32    000000c6     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7setupHWEd)
-                  00011ef8    000000c2     timer.obj (.text:_Z12timer_createjiPFvPvES_)
-                  00011fba    000000ba     rts430x_lc_rd_eabi.lib : memory.obj (.text:malloc)
-                  00012074    000000b4                            : trgdrv.obj (.text:HOSTlseek)
-                  00012128    000000b2                            : renormd.obj (.text:__TI_renormd)
-                  000121da    0000009a     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7checkHWEv)
-                  00012274    00000092     cribbage_driver.obj (.text:_ZN8Cribbage4Init11handleInputERNS_10ControllerE)
-                  00012306    00000090     rts430x_lc_rd_eabi.lib : fputc.obj (.text:fputc)
-                  00012396    0000008e                            : memory.obj (.text:free)
-                  00012424    0000008c     timer.obj (.text:_Z10timer_initd)
-                  000124b0    0000008a     InputHandler.obj (.text:_ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE)
-                  0001253a    00000084     rts430x_lc_rd_eabi.lib : vec_newdel.obj (.text:_Z17array_new_generalPvijjS_PFYS_S_ES1_PFYS_jEPFYvS_Eii)
-                  000125be    00000084     cribbage_driver.obj (.text:_ZN8Cribbage10ControllerC1Ev)
-                  00012642    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
-                  000126c4    0000007e                            : _io_perm.obj (.text:__TI_wrt_ok)
-                  00012742    00000078     main.obj (.text:__sti___8_main_cpp_UP)
-                  000127ba    00000074     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTrename)
-                  0001282e    00000072     InputHandler.obj (.text:_ZN2IO8InputPin4initEv)
-                  000128a0    00000070     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTopen)
-                  00012910    00000070                            : fclose.obj (.text:__TI_closefile)
-                  00012980    0000006c                            : trgdrv.obj (.text:HOSTwrite)
-                  000129ec    0000006a                            : trgdrv.obj (.text:HOSTread)
-                  00012a56    0000006a                            : fseek.obj (.text:fseek)
-                  00012ac0    00000068                            : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
-                  00012b28    00000068                            : fixdul.obj (.text:__mspabi_fixdul)
-                  00012b90    00000066                            : fixdli.obj (.text:__mspabi_fixdli)
-                  00012bf6    00000066                            : cpy_tbl.obj (.text:copy_in)
-                  00012c5c    00000064                            : fflush.obj (.text:__TI_doflush)
-                  00012cc0    0000005c     main.obj (.text:_Z11setUpTimersdd)
-                  00012d1c    0000005a     rts430x_lc_rd_eabi.lib : lowlev.obj (.text:close)
-                  00012d76    0000005a                            : lowlev.obj (.text:getdevice)
-                  00012dd0    00000058                            : fflush.obj (.text:fflush)
-                  00012e28    00000056     USCII2C.obj (.text:_ZN2IO8USCI_I2C9checkAddrEh)
-                  00012e7e    0000004e     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTclose)
-                  00012ecc    0000004a                            : exit.obj (.text:exit)
-                  00012f16    0000004a                            : printf.obj (.text:printf)
-                  00012f60    00000048                            : _printfi_min.obj (.text:_pproc_str)
-                  00012fa8    00000046                            : trgdrv.obj (.text:HOSTunlink)
-                  00012fee    00000046     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriverC1Ev)
-                  00013034    00000042     rts430x_lc_rd_eabi.lib : memory.obj (.text:minit)
-                  00013076    0000003e                            : asr32.obj (.text:l_asr_const)
-                  000130b4    0000003e                            : lsl32.obj (.text:l_lsl_const)
-                  000130f2    0000003e                            : lsr32.obj (.text:l_lsr_const)
-                  00013130    0000003e                            : lowlev.obj (.text:lseek)
-                  0001316e    0000003c                            : vec_newdel.obj (.text:__cxa_vec_ctor)
-                  000131aa    0000003c                            : lowlev.obj (.text:write)
-                  000131e6    00000036                            : fopen.obj (.text:__TI_cleanup)
-                  0001321c    00000036                            : trgmsg.obj (.text:__TI_writemsg)
-                  00013252    00000034     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver12updateDrvCmdEv)
-                  00013286    00000034     rts430x_lc_rd_eabi.lib : new_.obj (.text:_Znwj)
-                  000132ba    00000032     cribbage_driver.obj (.text:_ZN8Cribbage10Controller7sysInitEd)
-                  000132ec    00000032     rts430x_lc_rd_eabi.lib : trgmsg.obj (.text:__TI_readmsg)
-                  0001331e    00000032                            : subd.obj (.text:__mspabi_subd)
-                  00013350    00000032                            : strncpy.obj (.text:strncpy)
-                  00013382    00000030     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv)
-                  000133b2    00000030     rts430x_lc_rd_eabi.lib : lowlev.obj (.text:unlink)
-                  000133e2    0000002e                            : lowlev.obj (.text:finddevice)
-                  00013410    0000002a     cribbage_driver.obj (.text:_ZN8Cribbage4Init6updateERNS_10ControllerE)
-                  0001343a    00000028     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
-                  00013462    00000028     rts430x_lc_rd_eabi.lib : fixdi.obj (.text:__mspabi_fixdi)
-                  0001348a    00000028     cribbage_driver.obj (.text:__sti___19_cribbage_driver_cpp_1ff44c53)
-                  000134b2    00000024     cribbage_driver.obj (.text:_ZN8Cribbage10Controller5enterEv)
-                  000134d6    00000024     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver4ctrlEjb)
-                  000134fa    00000024     rts430x_lc_rd_eabi.lib : mult32_f5hw.obj (.text)
-                  0001351e    00000022     cribbage_driver.obj (.text:_ZN8Cribbage4Init5enterERNS_10ControllerE)
-                  00013540    0000001e     cribbage_driver.obj (.text:_ZN8Cribbage10Controller11handleInputEv)
-                  0001355e    0000001e     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver5clearEv)
-                  0001357c    0000001e     rts430x_lc_rd_eabi.lib : memccpy.obj (.text:memccpy)
-                  0001359a    0000001c                            : strchr.obj (.text:strchr)
-                  000135b6    0000001c                            : strcmp.obj (.text:strcmp)
-                  000135d2    0000001a     cribbage_driver.obj (.text:_ZN8Cribbage2UIC1Ev)
-                  000135ec    0000001a     rts430x_lc_rd_eabi.lib : assert.obj (.text:_abort_msg)
-                  00013606    00000018     cribbage_driver.obj (.text:_ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE)
-                  0001361e    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
-                  00013636    00000016     cribbage_driver.obj (.text:_ZN8Cribbage6PlayerC1Ev)
-                  0001364c    00000016     rts430x_lc_rd_eabi.lib : memchr.obj (.text:memchr)
-                  00013662    00000016                            : memset.obj (.text:memset)
-                  00013678    00000016                            : div16u.obj (.text)
-                  0001368e    00000014     cribbage_driver.obj (.text:_ZN8Cribbage10Controller6updateEv)
-                  000136a2    00000014     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_)
-                  000136b6    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
-                  000136ca    00000012     cribbage_driver.obj (.text:_ZN8Cribbage2UI12setCurrScoreEj)
-                  000136dc    00000012     rts430x_lc_rd_eabi.lib : fixdu.obj (.text:__mspabi_fixdu)
-                  000136ee    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
-                  00013700    00000012                            : strcpy.obj (.text:strcpy)
-                  00013712    00000010                            : asr32.obj (.text:l_asr)
-                  00013722    00000010                            : lsl32.obj (.text:l_lsl)
-                  00013732    00000010                            : lsr32.obj (.text:l_lsr)
-                  00013742    0000000e                            : strlen.obj (.text:strlen)
-                  00013750    0000000c     InputHandler.obj (.text:_ZN2IO8InputPin4readEv)
-                  0001375c    0000000a     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD0Ev)
-                  00013766    0000000a                            : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD0Ev)
-                  00013770    0000000a                            : delete.obj (.text:_ZdlPv)
-                  0001377a    0000000a                            : lsl16.obj (.text)
-                  00013784    00000008     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver3setEj)
-                  0001378c    00000008     cribbage_driver.obj (.text:_ZN8Cribbage15updateLEDPOV_CBEPv)
-                  00013794    00000008     cribbage_driver.obj (.text:_ZN8Cribbage5Turns11handleInputERNS_10ControllerE)
-                  0001379c    00000008     rts430x_lc_rd_eabi.lib : pure_virt.obj (.text:__cxa_pure_virtual)
-                  000137a4    00000006     USCII2C.obj (.text:_ZN2IO8USCI_I2CC1Ev)
-                  000137aa    00000006     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7disableEv)
-                  000137b0    00000006     cribbage_driver.obj (.text:_ZN8Cribbage2UI9setPlayerEj)
-                  000137b6    00000006     rts430x_lc_rd_eabi.lib : printf.obj (.text:_outc)
-                  000137bc    00000006                            : exit.obj (.text:abort)
-                  000137c2    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
-                  000137c8    00000004                            : error.obj (.text:__abort_execution)
-                  000137cc    00000004                            : printf.obj (.text:_outs)
-                  000137d0    00000004                            : pre_init.obj (.text:_system_pre_init)
-                  000137d4    00000002                            : newhandler.obj (.text:_Z21__default_new_handlerv)
-                  000137d6    00000002                            : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD1Ev)
-                  000137d8    00000002                            : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD1Ev)
-                  000137da    00000002     cribbage_driver.obj (.text:_ZN8Cribbage5Turns5enterERNS_10ControllerE)
-                  000137dc    00000002     cribbage_driver.obj (.text:_ZN8Cribbage5Turns6updateERNS_10ControllerE)
-                  000137de    00000002     rts430x_lc_rd_eabi.lib : _lock.obj (.text:_nop)
-                  000137e0    00000002                            : startup.obj (.text:_system_post_cinit)
+                  00010f16    00000240     main.obj (.text:_Z9setUpPinsd)
+                  00011156    00000222     rts430x_lc_rd_eabi.lib : divd.obj (.text:__mspabi_divd)
+                  00011378    00000132                            : _printfi_min.obj (.text:_setfield)
+                  000114aa    000000f2     InputHandler.obj (.text:_ZN2IO8InputPin4initEdddd)
+                  0001159c    000000f0     rts430x_lc_rd_eabi.lib : fputs.obj (.text:fputs)
+                  0001168c    000000e8     InputHandler.obj (.text:_ZN2IO8InputPin13fromInterruptEv)
+                  00011774    000000e0     rts430x_lc_rd_eabi.lib : setvbuf.obj (.text:setvbuf)
+                  00011854    000000d8                            : _printfi_min.obj (.text:_pproc_diouxp)
+                  0001192c    000000d2                            : _printfi_min.obj (.text:__TI_printfi_minimal)
+                  000119fe    000000ca     USCII2C.obj (.text:_ZN2IO8USCI_I2C11transactionEPjjPhj)
+                  00011ac8    000000ca     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver12updateI2CCmdEv)
+                  00011b92    000000c2     timer.obj (.text:_Z12timer_createjiPFvPvES_)
+                  00011c54    000000ba     rts430x_lc_rd_eabi.lib : memory.obj (.text:malloc)
+                  00011d0e    000000b4                            : trgdrv.obj (.text:HOSTlseek)
+                  00011dc2    000000b2                            : renormd.obj (.text:__TI_renormd)
+                  00011e74    00000094     main.obj (.text:main)
+                  00011f08    00000092     cribbage_driver.obj (.text:_ZN8Cribbage4Init11handleInputERNS_10ControllerE)
+                  00011f9a    00000090     rts430x_lc_rd_eabi.lib : fputc.obj (.text:fputc)
+                  0001202a    0000008e     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7checkHWEv)
+                  000120b8    0000008e     rts430x_lc_rd_eabi.lib : memory.obj (.text:free)
+                  00012146    0000008c     timer.obj (.text:_Z10timer_initd)
+                  000121d2    0000008a     InputHandler.obj (.text:_ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE)
+                  0001225c    00000084     rts430x_lc_rd_eabi.lib : vec_newdel.obj (.text:_Z17array_new_generalPvijjS_PFYS_S_ES1_PFYS_jEPFYvS_Eii)
+                  000122e0    00000084     cribbage_driver.obj (.text:_ZN8Cribbage10ControllerC1Ev)
+                  00012364    00000082     rts430x_lc_rd_eabi.lib : autoinit_wdt.obj (.text:_auto_init_hold_wdt)
+                  000123e6    0000007e                            : _io_perm.obj (.text:__TI_wrt_ok)
+                  00012464    0000007c     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7setupHWEm)
+                  000124e0    0000007a     main.obj (.text:__sti___8_main_cpp_UP)
+                  0001255a    00000074     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTrename)
+                  000125ce    00000072     InputHandler.obj (.text:_ZN2IO8InputPin4initEv)
+                  00012640    00000070     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTopen)
+                  000126b0    00000070                            : fclose.obj (.text:__TI_closefile)
+                  00012720    0000006c                            : trgdrv.obj (.text:HOSTwrite)
+                  0001278c    0000006a                            : trgdrv.obj (.text:HOSTread)
+                  000127f6    0000006a                            : fseek.obj (.text:fseek)
+                  00012860    00000068                            : copy_decompress_rle.obj (.text:__TI_decompress_rle_core)
+                  000128c8    00000068                            : fixdul.obj (.text:__mspabi_fixdul)
+                  00012930    00000066                            : cpy_tbl.obj (.text:copy_in)
+                  00012996    00000064                            : fflush.obj (.text:__TI_doflush)
+                  000129fa    0000005c     main.obj (.text:_Z11setUpTimersdd)
+                  00012a56    0000005c     USCII2C.obj (.text:_ZN2IO8USCI_I2C4initEmmhjPVhh)
+                  00012ab2    0000005a     rts430x_lc_rd_eabi.lib : lowlev.obj (.text:close)
+                  00012b0c    0000005a                            : lowlev.obj (.text:getdevice)
+                  00012b66    00000058                            : fflush.obj (.text:fflush)
+                  00012bbe    00000058                            : div32u.obj (.text)
+                  00012c16    00000056     USCII2C.obj (.text:_ZN2IO8USCI_I2C9checkAddrEh)
+                  00012c6c    0000004e     rts430x_lc_rd_eabi.lib : trgdrv.obj (.text:HOSTclose)
+                  00012cba    0000004c     cribbage_driver.obj (.text:_ZN8Cribbage5Turns11handleInputERNS_10ControllerE)
+                  00012d06    0000004a     cribbage_driver.obj (.text:_ZN8Cribbage10Controller3runEv)
+                  00012d50    0000004a     rts430x_lc_rd_eabi.lib : exit.obj (.text:exit)
+                  00012d9a    0000004a                            : printf.obj (.text:printf)
+                  00012de4    00000048                            : _printfi_min.obj (.text:_pproc_str)
+                  00012e2c    00000046                            : trgdrv.obj (.text:HOSTunlink)
+                  00012e72    00000042                            : memory.obj (.text:minit)
+                  00012eb4    0000003e                            : asr32.obj (.text:l_asr_const)
+                  00012ef2    0000003e                            : lsl32.obj (.text:l_lsl_const)
+                  00012f30    0000003e                            : lsr32.obj (.text:l_lsr_const)
+                  00012f6e    0000003e                            : lowlev.obj (.text:lseek)
+                  00012fac    0000003c                            : vec_newdel.obj (.text:__cxa_vec_ctor)
+                  00012fe8    0000003c                            : lowlev.obj (.text:write)
+                  00013024    00000036                            : fopen.obj (.text:__TI_cleanup)
+                  0001305a    00000036                            : trgmsg.obj (.text:__TI_writemsg)
+                  00013090    00000034     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver12updateDrvCmdEv)
+                  000130c4    00000034     rts430x_lc_rd_eabi.lib : new_.obj (.text:_Znwj)
+                  000130f8    00000032                            : trgmsg.obj (.text:__TI_readmsg)
+                  0001312a    00000032                            : subd.obj (.text:__mspabi_subd)
+                  0001315c    00000032                            : strncpy.obj (.text:strncpy)
+                  0001318e    00000030     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv)
+                  000131be    00000030     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriverC1Ev)
+                  000131ee    00000030     rts430x_lc_rd_eabi.lib : lowlev.obj (.text:unlink)
+                  0001321e    0000002e                            : lowlev.obj (.text:finddevice)
+                  0001324c    0000002a     cribbage_driver.obj (.text:_ZN8Cribbage4Init6updateERNS_10ControllerE)
+                  00013276    00000028     MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib : mpu_init.o (.text:__mpu_init)
+                  0001329e    00000028     cribbage_driver.obj (.text:__sti___19_cribbage_driver_cpp_1ff44c53)
+                  000132c6    00000024     cribbage_driver.obj (.text:_ZN8Cribbage10Controller5enterEv)
+                  000132ea    00000024     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver4ctrlEjb)
+                  0001330e    00000024     rts430x_lc_rd_eabi.lib : mult32_f5hw.obj (.text)
+                  00013332    00000022     cribbage_driver.obj (.text:_ZN8Cribbage4Init5enterERNS_10ControllerE)
+                  00013354    00000022     cribbage_driver.obj (.text:_ZN8Cribbage5Turns5enterERNS_10ControllerE)
+                  00013376    0000001e     cribbage_driver.obj (.text:_ZN8Cribbage10Controller11handleInputEv)
+                  00013394    0000001e     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver5clearEv)
+                  000133b2    0000001e     rts430x_lc_rd_eabi.lib : memccpy.obj (.text:memccpy)
+                  000133d0    0000001c                            : strchr.obj (.text:strchr)
+                  000133ec    0000001c                            : strcmp.obj (.text:strcmp)
+                  00013408    0000001a     cribbage_driver.obj (.text:_ZN8Cribbage2UIC1Ev)
+                  00013422    0000001a     rts430x_lc_rd_eabi.lib : assert.obj (.text:_abort_msg)
+                  0001343c    00000018     cribbage_driver.obj (.text:_ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE)
+                  00013454    00000018     rts430x_lc_rd_eabi.lib : mult16_f5hw.obj (.text)
+                  0001346c    00000016     cribbage_driver.obj (.text:_ZN8Cribbage6PlayerC1Ev)
+                  00013482    00000016     rts430x_lc_rd_eabi.lib : memchr.obj (.text:memchr)
+                  00013498    00000016                            : memset.obj (.text:memset)
+                  000134ae    00000016                            : div16u.obj (.text)
+                  000134c4    00000014     cribbage_driver.obj (.text:_ZN8Cribbage10Controller6updateEv)
+                  000134d8    00000014     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_)
+                  000134ec    00000014     rts430x_lc_rd_eabi.lib : memcpy.obj (.text:memcpy)
+                  00013500    00000012     cribbage_driver.obj (.text:_ZN8Cribbage2UI12setCurrScoreEj)
+                  00013512    00000012     rts430x_lc_rd_eabi.lib : fixdu.obj (.text:__mspabi_fixdu)
+                  00013524    00000012                            : copy_decompress_none.obj (.text:decompress:none:__TI_decompress_none)
+                  00013536    00000012                            : strcpy.obj (.text:strcpy)
+                  00013548    00000010                            : asr32.obj (.text:l_asr)
+                  00013558    00000010                            : lsl32.obj (.text:l_lsl)
+                  00013568    00000010                            : lsr32.obj (.text:l_lsr)
+                  00013578    0000000e                            : strlen.obj (.text:strlen)
+                  00013586    0000000c     InputHandler.obj (.text:_ZN2IO8InputPin4readEv)
+                  00013592    0000000a     rts430x_lc_rd_eabi.lib : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD0Ev)
+                  0001359c    0000000a                            : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD0Ev)
+                  000135a6    0000000a     cribbage_driver.obj (.text:_ZN8Cribbage10Controller7sysInitEm)
+                  000135b0    0000000a     rts430x_lc_rd_eabi.lib : delete.obj (.text:_ZdlPv)
+                  000135ba    0000000a                            : lsl16.obj (.text)
+                  000135c4    00000008     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver3setEj)
+                  000135cc    00000008     cribbage_driver.obj (.text:_ZN8Cribbage15updateLEDPOV_CBEPv)
+                  000135d4    00000008     rts430x_lc_rd_eabi.lib : pure_virt.obj (.text:__cxa_pure_virtual)
+                  000135dc    00000006     USCII2C.obj (.text:_ZN2IO8USCI_I2CC1Ev)
+                  000135e2    00000006     cribbage_driver.obj (.text:_ZN8Cribbage13DisplayDriver7disableEv)
+                  000135e8    00000006     cribbage_driver.obj (.text:_ZN8Cribbage2UI9setPlayerEj)
+                  000135ee    00000006     rts430x_lc_rd_eabi.lib : printf.obj (.text:_outc)
+                  000135f4    00000006                            : exit.obj (.text:abort)
+                  000135fa    00000006                            : copy_decompress_rle.obj (.text:decompress:rle24:__TI_decompress_rle24)
+                  00013600    00000004                            : error.obj (.text:__abort_execution)
+                  00013604    00000004                            : printf.obj (.text:_outs)
+                  00013608    00000004                            : pre_init.obj (.text:_system_pre_init)
+                  0001360c    00000002                            : newhandler.obj (.text:_Z21__default_new_handlerv)
+                  0001360e    00000002                            : typeinfo_.obj (.text:_ZN10__cxxabiv117__class_type_infoD1Ev)
+                  00013610    00000002                            : typeinfo_.obj (.text:_ZN10__cxxabiv120__si_class_type_infoD1Ev)
+                  00013612    00000002     cribbage_driver.obj (.text:_ZN8Cribbage5Turns6updateERNS_10ControllerE)
+                  00013614    00000002     rts430x_lc_rd_eabi.lib : _lock.obj (.text:_nop)
+                  00013616    00000002                            : startup.obj (.text:_system_post_cinit)
 
 MODULE SUMMARY
 
        Module                     code    ro data   rw data
        ------                     ----    -------   -------
     ./
-       cribbage_driver.obj        1470    479       37     
-       InputHandler.obj           738     413       226    
-       main.obj                   1074    32        194    
-       USCII2C.obj                782     259       0      
+       cribbage_driver.obj        1496    479       37     
+       InputHandler.obj           738     413       30     
+       main.obj                   966     8         194    
+       USCII2C.obj                676     191       0      
        timer.obj                  520     62        128    
        CribbageConsts.obj         0       96        24     
-       IOHandler.obj              0       2         0      
+       IOHandler.obj              0       2         96     
     +--+--------------------------+-------+---------+---------+
-       Total:                     4584    1343      609    
+       Total:                     4396    1251      509    
                                                            
     /Applications/ti/ccsv6/ccs_base/msp430/lib/FR59xx/MSPMPU_INIT_LIB_CCS_msp430_large_code_restricted_data.lib
        mpu_init.o                 40      0         0      
@@ -484,7 +483,6 @@ MODULE SUMMARY
        defs.obj                   0       0         362    
        fputs.obj                  240     0         0      
        setvbuf.obj                224     0         0      
-       cmpd.obj                   216     0         0      
        vec_newdel.obj             192     0         0      
        fflush.obj                 188     0         0      
        renormd.obj                178     0         0      
@@ -497,7 +495,7 @@ MODULE SUMMARY
        fseek.obj                  106     0         0      
        fixdul.obj                 104     0         0      
        cpy_tbl.obj                102     0         0      
-       fixdli.obj                 102     0         0      
+       div32u.obj                 88      0         0      
        printf.obj                 84      0         0      
        exit.obj                   80      0         2      
        asr32.obj                  78      0         0      
@@ -507,7 +505,6 @@ MODULE SUMMARY
        new_.obj                   52      0         0      
        strncpy.obj                50      0         0      
        subd.obj                   50      0         0      
-       fixdi.obj                  40      0         0      
        mult32_f5hw.obj            36      0         0      
        boot_special.obj           32      0         0      
        memccpy.obj                30      0         0      
@@ -556,25 +553,25 @@ MODULE SUMMARY
        newhandler.obj             2       0         0      
        startup.obj                2       0         0      
     +--+--------------------------+-------+---------+---------+
-       Total:                     10226   210       872    
+       Total:                     9956    210       872    
                                                            
        Heap:                      0       0         1028   
        Stack:                     0       0         160    
-       Linker Generated:          0       128       0      
+       Linker Generated:          0       212       0      
     +--+--------------------------+-------+---------+---------+
-       Grand Total:               14850   1681      2669   
+       Grand Total:               14392   1673      2569   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00005474 records: 2, size/record: 8, table size: 16
-	.data: load addr=00005402, load size=0000005d bytes, run addr=00001c00, run size=00000283 bytes, compression=rle
-	.bss: load addr=00005460, load size=0000000b bytes, run addr=00001e84, run size=00000226 bytes, compression=rle
+__TI_cinit_table @ 0000546c records: 2, size/record: 8, table size: 16
+	.data: load addr=000053a6, load size=000000b1 bytes, run addr=00001e26, run size=0000021f bytes, compression=rle
+	.bss: load addr=00005458, load size=0000000b bytes, run addr=00001c00, run size=00000226 bytes, compression=rle
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000546c records: 2, size/record: 4, table size: 8
+__TI_handler_table @ 00005464 records: 2, size/record: 4, table size: 8
 	index: 0, handler: __TI_decompress_rle24
 	index: 1, handler: __TI_decompress_none
 
@@ -838,11 +835,11 @@ address   name
 000009ce  AESAXIN                                           
 000009cf  AESAXIN_H                                         
 000009ce  AESAXIN_L                                         
-00001f9c  BACK                                              
+00001d18  BACK                                              
 000004be  BCD2BIN                                           
 000004bc  BIN2BCD                                           
-000137bc  C$$EXIT                                           
-0001324e  C$$IO$$                                           
+000135f4  C$$EXIT                                           
+0001308c  C$$IO$$                                           
 0000043e  CAPTIO0CTL                                        
 0000043f  CAPTIO0CTL_H                                      
 0000043e  CAPTIO0CTL_L                                      
@@ -948,8 +945,8 @@ address   name
 0000050e  DMAIV                                             
 0000050f  DMAIV_H                                           
 0000050e  DMAIV_L                                           
-00001fbc  DOWN                                              
-00001fdc  ENTER                                             
+00001d38  DOWN                                              
+00001d58  ENTER                                             
 00000140  FRCTL0                                            
 00000141  FRCTL0_H                                          
 00000140  FRCTL0_L                                          
@@ -959,14 +956,14 @@ address   name
 00000146  GCCTL1                                            
 00000147  GCCTL1_H                                          
 00000146  GCCTL1_L                                          
-00012e7e  HOSTclose                                         
-00012074  HOSTlseek                                         
-000128a0  HOSTopen                                          
-000129ec  HOSTread                                          
-000127ba  HOSTrename                                        
-00012fa8  HOSTunlink                                        
-00012980  HOSTwrite                                         
-00001ffc  LEFT                                              
+00012c6c  HOSTclose                                         
+00011d0e  HOSTlseek                                         
+00012640  HOSTopen                                          
+0001278c  HOSTread                                          
+0001255a  HOSTrename                                        
+00012e2c  HOSTunlink                                        
+00012720  HOSTwrite                                         
+00001d78  LEFT                                              
 000004c4  MAC                                               
 000004da  MAC32H                                            
 000004db  MAC32H_H                                          
@@ -1154,7 +1151,7 @@ address   name
 000004ca  RESLO                                             
 000004cb  RESLO_H                                           
 000004ca  RESLO_L                                           
-0000201c  RIGHT                                             
+00001d98  RIGHT                                             
 000004ba  RTCADOWDAY                                        
 000004bb  RTCADOWDAY_H                                      
 000004ba  RTCADOWDAY_L                                      
@@ -1391,135 +1388,136 @@ address   name
 0000064e  UCB0TXBUF                                         
 0000064f  UCB0TXBUF_H                                       
 0000064e  UCB0TXBUF_L                                       
-0000203c  UP                                                
+00001db8  UP                                                
 0000015c  WDTCTL                                            
 0000015d  WDTCTL_H                                          
 0000015c  WDTCTL_L                                          
 00004400  _CIOBUF_                                          
 00004d22  _Z10timer1_isrv                                   
-00012424  _Z10timer_initd                                   
-00012cc0  _Z11setUpTimersdd                                 
-00011ef8  _Z12timer_createjiPFvPvES_                        
+00012146  _Z10timer_initd                                   
+000129fa  _Z11setUpTimersdd                                 
+00011b92  _Z12timer_createjiPFvPvES_                        
 00004e00  _Z15timer1_taiv_isrv                              
-000137d4  _Z21__default_new_handlerv                        
+0001360c  _Z21__default_new_handlerv                        
 00004de4  _Z7Timer_Av                                       
 00004c00  _Z8EUSCI_B0v                                      
 00010f16  _Z9setUpPinsd                                     
-0001375c  _ZN10__cxxabiv117__class_type_infoD0Ev            
-000137d6  _ZN10__cxxabiv117__class_type_infoD1Ev            
-000137d6  _ZN10__cxxabiv117__class_type_infoD2Ev            
-00013766  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
-000137d8  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
-000137d8  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
-0000205c  _ZN2IO3i2cE                                       
-00001e84  _ZN2IO5PORTSE                                     
-00001e78  _ZN2IO8InputPin12numInputPinsE                    
-0001178e  _ZN2IO8InputPin13fromInterruptEv                  
-000115ac  _ZN2IO8InputPin4initEdddd                         
-0001282e  _ZN2IO8InputPin4initEv                            
-00001c00  _ZN2IO8InputPin4pinsE                             
-00013750  _ZN2IO8InputPin4readEv                            
-000124b0  _ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE           
-000124b0  _ZN2IO8InputPinC2EjjbNS_6PULLUP6PULLUPE           
-00011bd8  _ZN2IO8USCI_I2C11transactionEPjjPhj               
-00011d6c  _ZN2IO8USCI_I2C4initEddhjPVhh                     
-00012e28  _ZN2IO8USCI_I2C9checkAddrEh                       
-000137a4  _ZN2IO8USCI_I2CC1Ev                               
-000137a4  _ZN2IO8USCI_I2CC2Ev                               
-00005400  _ZN2IO9NUM_PORTSE                                 
-00013540  _ZN8Cribbage10Controller11handleInputEv           
-000134b2  _ZN8Cribbage10Controller5enterEv                  
-0001368e  _ZN8Cribbage10Controller6updateEv                 
-000132ba  _ZN8Cribbage10Controller7sysInitEd                
-000125be  _ZN8Cribbage10ControllerC1Ev                      
-000125be  _ZN8Cribbage10ControllerC2Ev                      
-00013382  _ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv        
-00013252  _ZN8Cribbage13DisplayDriver12updateDrvCmdEv       
-00011ca2  _ZN8Cribbage13DisplayDriver12updateI2CCmdEv       
-000136a2  _ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_ 
-00013784  _ZN8Cribbage13DisplayDriver3setEj                 
-000134d6  _ZN8Cribbage13DisplayDriver4ctrlEjb               
-0001355e  _ZN8Cribbage13DisplayDriver5clearEv               
-00005202  _ZN8Cribbage13DisplayDriver6anodesE               
-000121da  _ZN8Cribbage13DisplayDriver7checkHWEv             
-000137aa  _ZN8Cribbage13DisplayDriver7disableEv             
-00011e32  _ZN8Cribbage13DisplayDriver7setupHWEd             
-00005232  _ZN8Cribbage13DisplayDriver8cathodesE             
-00012fee  _ZN8Cribbage13DisplayDriverC1Ev                   
-00012fee  _ZN8Cribbage13DisplayDriverC2Ev                   
-0001378c  _ZN8Cribbage15updateLEDPOV_CBEPv                  
-000053f8  _ZN8Cribbage2UI12playerOffsetE                    
-000136ca  _ZN8Cribbage2UI12setCurrScoreEj                   
-000137b0  _ZN8Cribbage2UI9setPlayerEj                       
-000135d2  _ZN8Cribbage2UIC1Ev                               
-000135d2  _ZN8Cribbage2UIC2Ev                               
-00002092  _ZN8Cribbage2UPE                                  
-00002096  _ZN8Cribbage4BACKE                                
-0000209a  _ZN8Cribbage4DOWNE                                
-00012274  _ZN8Cribbage4Init11handleInputERNS_10ControllerE  
-00013606  _ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE
-0001351e  _ZN8Cribbage4Init5enterERNS_10ControllerE         
-00013410  _ZN8Cribbage4Init6updateERNS_10ControllerE        
-0000209e  _ZN8Cribbage4LEFTE                                
-000020a2  _ZN8Cribbage5ENTERE                               
-000020a6  _ZN8Cribbage5RIGHTE                               
-00013794  _ZN8Cribbage5Turns11handleInputERNS_10ControllerE 
-000137da  _ZN8Cribbage5Turns5enterERNS_10ControllerE        
-000137dc  _ZN8Cribbage5Turns6updateERNS_10ControllerE       
-00001e82  _ZN8Cribbage6Player10numPlayersE                  
-00013636  _ZN8Cribbage6PlayerC1Ev                           
-00013636  _ZN8Cribbage6PlayerC2Ev                           
-000053b0  _ZTIN10__cxxabiv117__class_type_infoE             
-000053bc  _ZTIN10__cxxabiv120__si_class_type_infoE          
-000053e0  _ZTIN8Cribbage10ControllerE                       
-000053c8  _ZTIN8Cribbage4InitE                              
-000053e8  _ZTIN8Cribbage5StateE                             
-000053d4  _ZTIN8Cribbage5TurnsE                             
-000053f0  _ZTISt9type_info                                  
-00005280  _ZTSN10__cxxabiv117__class_type_infoE             
-0000525a  _ZTSN10__cxxabiv120__si_class_type_infoE          
-000052ba  _ZTSN8Cribbage10ControllerE                       
-00005370  _ZTSN8Cribbage4InitE                              
-0000534c  _ZTSN8Cribbage5StateE                             
-0000535e  _ZTSN8Cribbage5TurnsE                             
-000053a2  _ZTSSt9type_info                                  
-00005382  _ZTVN10__cxxabiv117__class_type_infoE             
-00005392  _ZTVN10__cxxabiv120__si_class_type_infoE          
-000052fc  _ZTVN8Cribbage10ControllerE                       
-00005310  _ZTVN8Cribbage4InitE                              
-00005324  _ZTVN8Cribbage5StateE                             
-00005338  _ZTVN8Cribbage5TurnsE                             
-00005156  _ZZN2IO8InputPin8evaluateEvEs                     
-000052d2  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs              
-000051cc  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0            
-00013770  _ZdaPv                                            
-00013770  _ZdlPv                                            
-00013286  _Znaj                                             
-00013286  _Znwj                                             
+00013592  _ZN10__cxxabiv117__class_type_infoD0Ev            
+0001360e  _ZN10__cxxabiv117__class_type_infoD1Ev            
+0001360e  _ZN10__cxxabiv117__class_type_infoD2Ev            
+0001359c  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
+00013610  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
+00013610  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
+00001dd8  _ZN2IO3i2cE                                       
+00001f66  _ZN2IO5PORTSE                                     
+0000203a  _ZN2IO8InputPin12numInputPinsE                    
+0001168c  _ZN2IO8InputPin13fromInterruptEv                  
+000114aa  _ZN2IO8InputPin4initEdddd                         
+000125ce  _ZN2IO8InputPin4initEv                            
+00002002  _ZN2IO8InputPin4pinsE                             
+00013586  _ZN2IO8InputPin4readEv                            
+000121d2  _ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE           
+000121d2  _ZN2IO8InputPinC2EjjbNS_6PULLUP6PULLUPE           
+000119fe  _ZN2IO8USCI_I2C11transactionEPjjPhj               
+00012a56  _ZN2IO8USCI_I2C4initEmmhjPVhh                     
+00012c16  _ZN2IO8USCI_I2C9checkAddrEh                       
+000135dc  _ZN2IO8USCI_I2CC1Ev                               
+000135dc  _ZN2IO8USCI_I2CC2Ev                               
+000053a4  _ZN2IO9NUM_PORTSE                                 
+00013376  _ZN8Cribbage10Controller11handleInputEv           
+00012d06  _ZN8Cribbage10Controller3runEv                    
+000132c6  _ZN8Cribbage10Controller5enterEv                  
+000134c4  _ZN8Cribbage10Controller6updateEv                 
+000135a6  _ZN8Cribbage10Controller7sysInitEm                
+000122e0  _ZN8Cribbage10ControllerC1Ev                      
+000122e0  _ZN8Cribbage10ControllerC2Ev                      
+0001318e  _ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv        
+00013090  _ZN8Cribbage13DisplayDriver12updateDrvCmdEv       
+00011ac8  _ZN8Cribbage13DisplayDriver12updateI2CCmdEv       
+000134d8  _ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_ 
+000135c4  _ZN8Cribbage13DisplayDriver3setEj                 
+000132ea  _ZN8Cribbage13DisplayDriver4ctrlEjb               
+00013394  _ZN8Cribbage13DisplayDriver5clearEv               
+000051be  _ZN8Cribbage13DisplayDriver6anodesE               
+0001202a  _ZN8Cribbage13DisplayDriver7checkHWEv             
+000135e2  _ZN8Cribbage13DisplayDriver7disableEv             
+00012464  _ZN8Cribbage13DisplayDriver7setupHWEm             
+000051ee  _ZN8Cribbage13DisplayDriver8cathodesE             
+000131be  _ZN8Cribbage13DisplayDriverC1Ev                   
+000131be  _ZN8Cribbage13DisplayDriverC2Ev                   
+000135cc  _ZN8Cribbage15updateLEDPOV_CBEPv                  
+0000539c  _ZN8Cribbage2UI12playerOffsetE                    
+00013500  _ZN8Cribbage2UI12setCurrScoreEj                   
+000135e8  _ZN8Cribbage2UI9setPlayerEj                       
+00013408  _ZN8Cribbage2UIC1Ev                               
+00013408  _ZN8Cribbage2UIC2Ev                               
+00001e0e  _ZN8Cribbage2UPE                                  
+00001e12  _ZN8Cribbage4BACKE                                
+00001e16  _ZN8Cribbage4DOWNE                                
+00011f08  _ZN8Cribbage4Init11handleInputERNS_10ControllerE  
+0001343c  _ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE
+00013332  _ZN8Cribbage4Init5enterERNS_10ControllerE         
+0001324c  _ZN8Cribbage4Init6updateERNS_10ControllerE        
+00001e1a  _ZN8Cribbage4LEFTE                                
+00001e1e  _ZN8Cribbage5ENTERE                               
+00001e22  _ZN8Cribbage5RIGHTE                               
+00012cba  _ZN8Cribbage5Turns11handleInputERNS_10ControllerE 
+00013354  _ZN8Cribbage5Turns5enterERNS_10ControllerE        
+00013612  _ZN8Cribbage5Turns6updateERNS_10ControllerE       
+00002044  _ZN8Cribbage6Player10numPlayersE                  
+0001346c  _ZN8Cribbage6PlayerC1Ev                           
+0001346c  _ZN8Cribbage6PlayerC2Ev                           
+00005354  _ZTIN10__cxxabiv117__class_type_infoE             
+00005360  _ZTIN10__cxxabiv120__si_class_type_infoE          
+00005384  _ZTIN8Cribbage10ControllerE                       
+0000536c  _ZTIN8Cribbage4InitE                              
+0000538c  _ZTIN8Cribbage5StateE                             
+00005378  _ZTIN8Cribbage5TurnsE                             
+00005394  _ZTISt9type_info                                  
+0000523c  _ZTSN10__cxxabiv117__class_type_infoE             
+00005216  _ZTSN10__cxxabiv120__si_class_type_infoE          
+0000525e  _ZTSN8Cribbage10ControllerE                       
+00005314  _ZTSN8Cribbage4InitE                              
+000052f0  _ZTSN8Cribbage5StateE                             
+00005302  _ZTSN8Cribbage5TurnsE                             
+00005346  _ZTSSt9type_info                                  
+00005326  _ZTVN10__cxxabiv117__class_type_infoE             
+00005336  _ZTVN10__cxxabiv120__si_class_type_infoE          
+000052a0  _ZTVN8Cribbage10ControllerE                       
+000052b4  _ZTVN8Cribbage4InitE                              
+000052c8  _ZTVN8Cribbage5StateE                             
+000052dc  _ZTVN8Cribbage5TurnsE                             
+00005112  _ZZN2IO8InputPin8evaluateEvEs                     
+00005276  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs              
+00005188  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0            
+000135b0  _ZdaPv                                            
+000135b0  _ZdlPv                                            
+000130c4  _Znaj                                             
+000130c4  _Znwj                                             
 00002400  __STACK_END                                       
 000000a0  __STACK_SIZE                                      
 00000404  __SYSMEM_SIZE                                     
 UNDEFED   __TI_BINIT_Base                                   
 UNDEFED   __TI_BINIT_Limit                                  
-00005474  __TI_CINIT_Base                                   
-00005484  __TI_CINIT_Limit                                  
-0000546c  __TI_Handler_Table_Base                           
-00005474  __TI_Handler_Table_Limit                          
+0000546c  __TI_CINIT_Base                                   
+0000547c  __TI_CINIT_Limit                                  
+00005464  __TI_Handler_Table_Base                           
+0000546c  __TI_Handler_Table_Limit                          
 00004e20  __TI_INITARRAY_Base                               
 00004e28  __TI_INITARRAY_Limit                              
 00004e18  __TI_ISR_TRAP                                     
-000131e6  __TI_cleanup                                      
-00001e64  __TI_cleanup_ptr                                  
-00012910  __TI_closefile                                    
-000136ee  __TI_decompress_none                              
-000137c2  __TI_decompress_rle24                             
-00012c5c  __TI_doflush                                      
-00001e68  __TI_dtors_ptr                                    
-00001e7e  __TI_enable_exit_profile_output                   
+00013024  __TI_cleanup                                      
+00002026  __TI_cleanup_ptr                                  
+000126b0  __TI_closefile                                    
+00013524  __TI_decompress_none                              
+000135fa  __TI_decompress_rle24                             
+00012996  __TI_doflush                                      
+0000202a  __TI_dtors_ptr                                    
+00002040  __TI_enable_exit_profile_output                   
 00010cc4  __TI_frcaddd                                      
 00010000  __TI_frcdivd                                      
 00010486  __TI_frcmpyd                                      
-00001e7c  __TI_ft_end                                       
+0000203e  __TI_ft_end                                       
 0000ffcc  __TI_int30                                        
 0000ffce  __TI_int31                                        
 0000ffd0  __TI_int32                                        
@@ -1546,134 +1544,133 @@ UNDEFED   __TI_BINIT_Limit
 0000fffa  __TI_int53                                        
 0000fffc  __TI_int54                                        
 ffffffff  __TI_pprof_out_hndl                               
-00011b06  __TI_printfi_minimal                              
+0001192c  __TI_printfi_minimal                              
 ffffffff  __TI_prof_data_size                               
 ffffffff  __TI_prof_data_start                              
-000132ec  __TI_readmsg                                      
-00012128  __TI_renormd                                      
-00001e84  __TI_tmpnams                                      
-0001321c  __TI_writemsg                                     
-000126c4  __TI_wrt_ok                                       
-000137c8  __abort_execution                                 
+000130f8  __TI_readmsg                                      
+00011dc2  __TI_renormd                                      
+00001c00  __TI_tmpnams                                      
+0001305a  __TI_writemsg                                     
+000123e6  __TI_wrt_ok                                       
+00013600  __abort_execution                                 
 ffffffff  __c_args__                                        
-0001379c  __cxa_pure_virtual                                
-0001316e  __cxa_vec_ctor                                    
+000135d4  __cxa_pure_virtual                                
+00012fac  __cxa_vec_ctor                                    
 00000001  __mpu_enable                                      
-0001343a  __mpu_init                                        
+00013276  __mpu_init                                        
 0001076a  __mspabi_addd                                     
-00011956  __mspabi_cmpd                                     
-00011160  __mspabi_divd                                     
-00013678  __mspabi_divu                                     
-00013462  __mspabi_fixdi                                    
-00012b90  __mspabi_fixdli                                   
-000136dc  __mspabi_fixdu                                    
-00012b28  __mspabi_fixdul                                   
+00011156  __mspabi_divd                                     
+000134ae  __mspabi_divu                                     
+00012bbe  __mspabi_divul                                    
+00013512  __mspabi_fixdu                                    
+000128c8  __mspabi_fixdul                                   
 00010a42  __mspabi_mpyd                                     
-0001361e  __mspabi_mpyi_f5hw                                
-000134fa  __mspabi_mpyl_f5hw                                
-00013678  __mspabi_remu                                     
-0001377a  __mspabi_slli                                     
-00013722  __mspabi_slll                                     
-000130ec  __mspabi_slll_1                                   
-000130c8  __mspabi_slll_10                                  
-000130c4  __mspabi_slll_11                                  
-000130c0  __mspabi_slll_12                                  
-000130bc  __mspabi_slll_13                                  
-000130b8  __mspabi_slll_14                                  
-000130b4  __mspabi_slll_15                                  
-000130e8  __mspabi_slll_2                                   
-000130e4  __mspabi_slll_3                                   
-000130e0  __mspabi_slll_4                                   
-000130dc  __mspabi_slll_5                                   
-000130d8  __mspabi_slll_6                                   
-000130d4  __mspabi_slll_7                                   
-000130d0  __mspabi_slll_8                                   
-000130cc  __mspabi_slll_9                                   
-00013712  __mspabi_sral                                     
-000130ae  __mspabi_sral_1                                   
-0001308a  __mspabi_sral_10                                  
-00013086  __mspabi_sral_11                                  
-00013082  __mspabi_sral_12                                  
-0001307e  __mspabi_sral_13                                  
-0001307a  __mspabi_sral_14                                  
-00013076  __mspabi_sral_15                                  
-000130aa  __mspabi_sral_2                                   
-000130a6  __mspabi_sral_3                                   
-000130a2  __mspabi_sral_4                                   
-0001309e  __mspabi_sral_5                                   
-0001309a  __mspabi_sral_6                                   
-00013096  __mspabi_sral_7                                   
-00013092  __mspabi_sral_8                                   
-0001308e  __mspabi_sral_9                                   
-00013732  __mspabi_srll                                     
-0001312a  __mspabi_srll_1                                   
-00013106  __mspabi_srll_10                                  
-00013102  __mspabi_srll_11                                  
-000130fe  __mspabi_srll_12                                  
-000130fa  __mspabi_srll_13                                  
-000130f6  __mspabi_srll_14                                  
-000130f2  __mspabi_srll_15                                  
-00013126  __mspabi_srll_2                                   
-00013122  __mspabi_srll_3                                   
-0001311e  __mspabi_srll_4                                   
-0001311a  __mspabi_srll_5                                   
-00013116  __mspabi_srll_6                                   
-00013112  __mspabi_srll_7                                   
-0001310e  __mspabi_srll_8                                   
-0001310a  __mspabi_srll_9                                   
-0001331e  __mspabi_subd                                     
-0001348a  __sti___19_cribbage_driver_cpp_1ff44c53           
-00012742  __sti___8_main_cpp_UP                             
-000135ec  _abort_msg                                        
-00012642  _auto_init_hold_wdt                               
+00013454  __mspabi_mpyi_f5hw                                
+0001330e  __mspabi_mpyl_f5hw                                
+000134ae  __mspabi_remu                                     
+00012bbe  __mspabi_remul                                    
+000135ba  __mspabi_slli                                     
+00013558  __mspabi_slll                                     
+00012f2a  __mspabi_slll_1                                   
+00012f06  __mspabi_slll_10                                  
+00012f02  __mspabi_slll_11                                  
+00012efe  __mspabi_slll_12                                  
+00012efa  __mspabi_slll_13                                  
+00012ef6  __mspabi_slll_14                                  
+00012ef2  __mspabi_slll_15                                  
+00012f26  __mspabi_slll_2                                   
+00012f22  __mspabi_slll_3                                   
+00012f1e  __mspabi_slll_4                                   
+00012f1a  __mspabi_slll_5                                   
+00012f16  __mspabi_slll_6                                   
+00012f12  __mspabi_slll_7                                   
+00012f0e  __mspabi_slll_8                                   
+00012f0a  __mspabi_slll_9                                   
+00013548  __mspabi_sral                                     
+00012eec  __mspabi_sral_1                                   
+00012ec8  __mspabi_sral_10                                  
+00012ec4  __mspabi_sral_11                                  
+00012ec0  __mspabi_sral_12                                  
+00012ebc  __mspabi_sral_13                                  
+00012eb8  __mspabi_sral_14                                  
+00012eb4  __mspabi_sral_15                                  
+00012ee8  __mspabi_sral_2                                   
+00012ee4  __mspabi_sral_3                                   
+00012ee0  __mspabi_sral_4                                   
+00012edc  __mspabi_sral_5                                   
+00012ed8  __mspabi_sral_6                                   
+00012ed4  __mspabi_sral_7                                   
+00012ed0  __mspabi_sral_8                                   
+00012ecc  __mspabi_sral_9                                   
+00013568  __mspabi_srll                                     
+00012f68  __mspabi_srll_1                                   
+00012f44  __mspabi_srll_10                                  
+00012f40  __mspabi_srll_11                                  
+00012f3c  __mspabi_srll_12                                  
+00012f38  __mspabi_srll_13                                  
+00012f34  __mspabi_srll_14                                  
+00012f30  __mspabi_srll_15                                  
+00012f64  __mspabi_srll_2                                   
+00012f60  __mspabi_srll_3                                   
+00012f5c  __mspabi_srll_4                                   
+00012f58  __mspabi_srll_5                                   
+00012f54  __mspabi_srll_6                                   
+00012f50  __mspabi_srll_7                                   
+00012f4c  __mspabi_srll_8                                   
+00012f48  __mspabi_srll_9                                   
+0001312a  __mspabi_subd                                     
+0001329e  __sti___19_cribbage_driver_cpp_1ff44c53           
+000124e0  __sti___8_main_cpp_UP                             
+00013422  _abort_msg                                        
+00012364  _auto_init_hold_wdt                               
 00004dc4  _c_int00_noargs_mpu                               
-00001ce0  _ftable                                           
-00001e6c  _lock                                             
-00001e74  _new_handler                                      
-000137de  _nop                                              
+00001e26  _ftable                                           
+0000202e  _lock                                             
+00002036  _new_handler                                      
+00013614  _nop                                              
 0000fffe  _reset_vector                                     
 00002360  _stack                                            
 00004520  _sys_memory                                       
-000137e0  _system_post_cinit                                
-000137d0  _system_pre_init                                  
-00001e70  _unlock                                           
-000137bc  abort                                             
-00012d1c  close                                             
-00012bf6  copy_in                                           
-00012ecc  exit                                              
-00012dd0  fflush                                            
-00012306  fputc                                             
-0001169e  fputs                                             
+00013616  _system_post_cinit                                
+00013608  _system_pre_init                                  
+00002032  _unlock                                           
+000135f4  abort                                             
+00012ab2  close                                             
+00012930  copy_in                                           
+00012d50  exit                                              
+00012b66  fflush                                            
+00011f9a  fputc                                             
+0001159c  fputs                                             
 00004c00  fram_ipe_end                                      
 00004c00  fram_ipe_start                                    
 00004400  fram_rw_start                                     
 00004c00  fram_rx_start                                     
-00012396  free                                              
-00012a56  fseek                                             
-00013130  lseek                                             
-000114b4  main                                              
-00011fba  malloc                                            
-0001357c  memccpy                                           
-0001364c  memchr                                            
-000136b6  memcpy                                            
-00013662  memset                                            
-00013034  minit                                             
+000120b8  free                                              
+000127f6  fseek                                             
+00012f6e  lseek                                             
+00011e74  main                                              
+00011c54  malloc                                            
+000133b2  memccpy                                           
+00013482  memchr                                            
+000134ec  memcpy                                            
+00013498  memset                                            
+00012e72  minit                                             
 0000a501  mpu_ctl0_value                                    
 00001513  mpu_sam_value                                     
 000004c0  mpu_segment_border1                               
 000004c0  mpu_segment_border2                               
-00002070  players_g                                         
-00012f16  printf                                            
-00012306  putc                                              
-000133b2  remove                                            
-00011876  setvbuf                                           
-0001359a  strchr                                            
-000135b6  strcmp                                            
-00013700  strcpy                                            
-00013742  strlen                                            
-00013350  strncpy                                           
-000133b2  unlink                                            
-000131aa  write                                             
+00001dec  players_g                                         
+00012d9a  printf                                            
+00011f9a  putc                                              
+000131ee  remove                                            
+00011774  setvbuf                                           
+000133d0  strchr                                            
+000133ec  strcmp                                            
+00013536  strcpy                                            
+00013578  strlen                                            
+0001315c  strncpy                                           
+000131ee  unlink                                            
+00012fe8  write                                             
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -2483,33 +2480,33 @@ address   name
 000009ce  AESAXIN_L                                         
 000009cf  AESAXIN_H                                         
 00001513  mpu_sam_value                                     
-00001c00  _ZN2IO8InputPin4pinsE                             
-00001ce0  _ftable                                           
-00001e64  __TI_cleanup_ptr                                  
-00001e68  __TI_dtors_ptr                                    
-00001e6c  _lock                                             
-00001e70  _unlock                                           
-00001e74  _new_handler                                      
-00001e78  _ZN2IO8InputPin12numInputPinsE                    
-00001e7c  __TI_ft_end                                       
-00001e7e  __TI_enable_exit_profile_output                   
-00001e82  _ZN8Cribbage6Player10numPlayersE                  
-00001e84  _ZN2IO5PORTSE                                     
-00001e84  __TI_tmpnams                                      
-00001f9c  BACK                                              
-00001fbc  DOWN                                              
-00001fdc  ENTER                                             
-00001ffc  LEFT                                              
-0000201c  RIGHT                                             
-0000203c  UP                                                
-0000205c  _ZN2IO3i2cE                                       
-00002070  players_g                                         
-00002092  _ZN8Cribbage2UPE                                  
-00002096  _ZN8Cribbage4BACKE                                
-0000209a  _ZN8Cribbage4DOWNE                                
-0000209e  _ZN8Cribbage4LEFTE                                
-000020a2  _ZN8Cribbage5ENTERE                               
-000020a6  _ZN8Cribbage5RIGHTE                               
+00001c00  __TI_tmpnams                                      
+00001d18  BACK                                              
+00001d38  DOWN                                              
+00001d58  ENTER                                             
+00001d78  LEFT                                              
+00001d98  RIGHT                                             
+00001db8  UP                                                
+00001dd8  _ZN2IO3i2cE                                       
+00001dec  players_g                                         
+00001e0e  _ZN8Cribbage2UPE                                  
+00001e12  _ZN8Cribbage4BACKE                                
+00001e16  _ZN8Cribbage4DOWNE                                
+00001e1a  _ZN8Cribbage4LEFTE                                
+00001e1e  _ZN8Cribbage5ENTERE                               
+00001e22  _ZN8Cribbage5RIGHTE                               
+00001e26  _ftable                                           
+00001f66  _ZN2IO5PORTSE                                     
+00002002  _ZN2IO8InputPin4pinsE                             
+00002026  __TI_cleanup_ptr                                  
+0000202a  __TI_dtors_ptr                                    
+0000202e  _lock                                             
+00002032  _unlock                                           
+00002036  _new_handler                                      
+0000203a  _ZN2IO8InputPin12numInputPinsE                    
+0000203e  __TI_ft_end                                       
+00002040  __TI_enable_exit_profile_output                   
+00002044  _ZN8Cribbage6Player10numPlayersE                  
 00002360  _stack                                            
 00002400  __STACK_END                                       
 00004400  _CIOBUF_                                          
@@ -2526,37 +2523,37 @@ address   name
 00004e18  __TI_ISR_TRAP                                     
 00004e20  __TI_INITARRAY_Base                               
 00004e28  __TI_INITARRAY_Limit                              
-00005156  _ZZN2IO8InputPin8evaluateEvEs                     
-000051cc  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0            
-00005202  _ZN8Cribbage13DisplayDriver6anodesE               
-00005232  _ZN8Cribbage13DisplayDriver8cathodesE             
-0000525a  _ZTSN10__cxxabiv120__si_class_type_infoE          
-00005280  _ZTSN10__cxxabiv117__class_type_infoE             
-000052ba  _ZTSN8Cribbage10ControllerE                       
-000052d2  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs              
-000052fc  _ZTVN8Cribbage10ControllerE                       
-00005310  _ZTVN8Cribbage4InitE                              
-00005324  _ZTVN8Cribbage5StateE                             
-00005338  _ZTVN8Cribbage5TurnsE                             
-0000534c  _ZTSN8Cribbage5StateE                             
-0000535e  _ZTSN8Cribbage5TurnsE                             
-00005370  _ZTSN8Cribbage4InitE                              
-00005382  _ZTVN10__cxxabiv117__class_type_infoE             
-00005392  _ZTVN10__cxxabiv120__si_class_type_infoE          
-000053a2  _ZTSSt9type_info                                  
-000053b0  _ZTIN10__cxxabiv117__class_type_infoE             
-000053bc  _ZTIN10__cxxabiv120__si_class_type_infoE          
-000053c8  _ZTIN8Cribbage4InitE                              
-000053d4  _ZTIN8Cribbage5TurnsE                             
-000053e0  _ZTIN8Cribbage10ControllerE                       
-000053e8  _ZTIN8Cribbage5StateE                             
-000053f0  _ZTISt9type_info                                  
-000053f8  _ZN8Cribbage2UI12playerOffsetE                    
-00005400  _ZN2IO9NUM_PORTSE                                 
-0000546c  __TI_Handler_Table_Base                           
-00005474  __TI_CINIT_Base                                   
-00005474  __TI_Handler_Table_Limit                          
-00005484  __TI_CINIT_Limit                                  
+00005112  _ZZN2IO8InputPin8evaluateEvEs                     
+00005188  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs_0            
+000051be  _ZN8Cribbage13DisplayDriver6anodesE               
+000051ee  _ZN8Cribbage13DisplayDriver8cathodesE             
+00005216  _ZTSN10__cxxabiv120__si_class_type_infoE          
+0000523c  _ZTSN10__cxxabiv117__class_type_infoE             
+0000525e  _ZTSN8Cribbage10ControllerE                       
+00005276  _ZZN2IO8USCI_I2C14waitForBusFreeEvEs              
+000052a0  _ZTVN8Cribbage10ControllerE                       
+000052b4  _ZTVN8Cribbage4InitE                              
+000052c8  _ZTVN8Cribbage5StateE                             
+000052dc  _ZTVN8Cribbage5TurnsE                             
+000052f0  _ZTSN8Cribbage5StateE                             
+00005302  _ZTSN8Cribbage5TurnsE                             
+00005314  _ZTSN8Cribbage4InitE                              
+00005326  _ZTVN10__cxxabiv117__class_type_infoE             
+00005336  _ZTVN10__cxxabiv120__si_class_type_infoE          
+00005346  _ZTSSt9type_info                                  
+00005354  _ZTIN10__cxxabiv117__class_type_infoE             
+00005360  _ZTIN10__cxxabiv120__si_class_type_infoE          
+0000536c  _ZTIN8Cribbage4InitE                              
+00005378  _ZTIN8Cribbage5TurnsE                             
+00005384  _ZTIN8Cribbage10ControllerE                       
+0000538c  _ZTIN8Cribbage5StateE                             
+00005394  _ZTISt9type_info                                  
+0000539c  _ZN8Cribbage2UI12playerOffsetE                    
+000053a4  _ZN2IO9NUM_PORTSE                                 
+00005464  __TI_Handler_Table_Base                           
+0000546c  __TI_CINIT_Base                                   
+0000546c  __TI_Handler_Table_Limit                          
+0000547c  __TI_CINIT_Limit                                  
 0000a501  mpu_ctl0_value                                    
 0000ffcc  __TI_int30                                        
 0000ffce  __TI_int31                                        
@@ -2590,181 +2587,181 @@ address   name
 00010a42  __mspabi_mpyd                                     
 00010cc4  __TI_frcaddd                                      
 00010f16  _Z9setUpPinsd                                     
-00011160  __mspabi_divd                                     
-000114b4  main                                              
-000115ac  _ZN2IO8InputPin4initEdddd                         
-0001169e  fputs                                             
-0001178e  _ZN2IO8InputPin13fromInterruptEv                  
-00011876  setvbuf                                           
-00011956  __mspabi_cmpd                                     
-00011b06  __TI_printfi_minimal                              
-00011bd8  _ZN2IO8USCI_I2C11transactionEPjjPhj               
-00011ca2  _ZN8Cribbage13DisplayDriver12updateI2CCmdEv       
-00011d6c  _ZN2IO8USCI_I2C4initEddhjPVhh                     
-00011e32  _ZN8Cribbage13DisplayDriver7setupHWEd             
-00011ef8  _Z12timer_createjiPFvPvES_                        
-00011fba  malloc                                            
-00012074  HOSTlseek                                         
-00012128  __TI_renormd                                      
-000121da  _ZN8Cribbage13DisplayDriver7checkHWEv             
-00012274  _ZN8Cribbage4Init11handleInputERNS_10ControllerE  
-00012306  fputc                                             
-00012306  putc                                              
-00012396  free                                              
-00012424  _Z10timer_initd                                   
-000124b0  _ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE           
-000124b0  _ZN2IO8InputPinC2EjjbNS_6PULLUP6PULLUPE           
-000125be  _ZN8Cribbage10ControllerC1Ev                      
-000125be  _ZN8Cribbage10ControllerC2Ev                      
-00012642  _auto_init_hold_wdt                               
-000126c4  __TI_wrt_ok                                       
-00012742  __sti___8_main_cpp_UP                             
-000127ba  HOSTrename                                        
-0001282e  _ZN2IO8InputPin4initEv                            
-000128a0  HOSTopen                                          
-00012910  __TI_closefile                                    
-00012980  HOSTwrite                                         
-000129ec  HOSTread                                          
-00012a56  fseek                                             
-00012b28  __mspabi_fixdul                                   
-00012b90  __mspabi_fixdli                                   
-00012bf6  copy_in                                           
-00012c5c  __TI_doflush                                      
-00012cc0  _Z11setUpTimersdd                                 
-00012d1c  close                                             
-00012dd0  fflush                                            
-00012e28  _ZN2IO8USCI_I2C9checkAddrEh                       
-00012e7e  HOSTclose                                         
-00012ecc  exit                                              
-00012f16  printf                                            
-00012fa8  HOSTunlink                                        
-00012fee  _ZN8Cribbage13DisplayDriverC1Ev                   
-00012fee  _ZN8Cribbage13DisplayDriverC2Ev                   
-00013034  minit                                             
-00013076  __mspabi_sral_15                                  
-0001307a  __mspabi_sral_14                                  
-0001307e  __mspabi_sral_13                                  
-00013082  __mspabi_sral_12                                  
-00013086  __mspabi_sral_11                                  
-0001308a  __mspabi_sral_10                                  
-0001308e  __mspabi_sral_9                                   
-00013092  __mspabi_sral_8                                   
-00013096  __mspabi_sral_7                                   
-0001309a  __mspabi_sral_6                                   
-0001309e  __mspabi_sral_5                                   
-000130a2  __mspabi_sral_4                                   
-000130a6  __mspabi_sral_3                                   
-000130aa  __mspabi_sral_2                                   
-000130ae  __mspabi_sral_1                                   
-000130b4  __mspabi_slll_15                                  
-000130b8  __mspabi_slll_14                                  
-000130bc  __mspabi_slll_13                                  
-000130c0  __mspabi_slll_12                                  
-000130c4  __mspabi_slll_11                                  
-000130c8  __mspabi_slll_10                                  
-000130cc  __mspabi_slll_9                                   
-000130d0  __mspabi_slll_8                                   
-000130d4  __mspabi_slll_7                                   
-000130d8  __mspabi_slll_6                                   
-000130dc  __mspabi_slll_5                                   
-000130e0  __mspabi_slll_4                                   
-000130e4  __mspabi_slll_3                                   
-000130e8  __mspabi_slll_2                                   
-000130ec  __mspabi_slll_1                                   
-000130f2  __mspabi_srll_15                                  
-000130f6  __mspabi_srll_14                                  
-000130fa  __mspabi_srll_13                                  
-000130fe  __mspabi_srll_12                                  
-00013102  __mspabi_srll_11                                  
-00013106  __mspabi_srll_10                                  
-0001310a  __mspabi_srll_9                                   
-0001310e  __mspabi_srll_8                                   
-00013112  __mspabi_srll_7                                   
-00013116  __mspabi_srll_6                                   
-0001311a  __mspabi_srll_5                                   
-0001311e  __mspabi_srll_4                                   
-00013122  __mspabi_srll_3                                   
-00013126  __mspabi_srll_2                                   
-0001312a  __mspabi_srll_1                                   
-00013130  lseek                                             
-0001316e  __cxa_vec_ctor                                    
-000131aa  write                                             
-000131e6  __TI_cleanup                                      
-0001321c  __TI_writemsg                                     
-0001324e  C$$IO$$                                           
-00013252  _ZN8Cribbage13DisplayDriver12updateDrvCmdEv       
-00013286  _Znaj                                             
-00013286  _Znwj                                             
-000132ba  _ZN8Cribbage10Controller7sysInitEd                
-000132ec  __TI_readmsg                                      
-0001331e  __mspabi_subd                                     
-00013350  strncpy                                           
-00013382  _ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv        
-000133b2  remove                                            
-000133b2  unlink                                            
-00013410  _ZN8Cribbage4Init6updateERNS_10ControllerE        
-0001343a  __mpu_init                                        
-00013462  __mspabi_fixdi                                    
-0001348a  __sti___19_cribbage_driver_cpp_1ff44c53           
-000134b2  _ZN8Cribbage10Controller5enterEv                  
-000134d6  _ZN8Cribbage13DisplayDriver4ctrlEjb               
-000134fa  __mspabi_mpyl_f5hw                                
-0001351e  _ZN8Cribbage4Init5enterERNS_10ControllerE         
-00013540  _ZN8Cribbage10Controller11handleInputEv           
-0001355e  _ZN8Cribbage13DisplayDriver5clearEv               
-0001357c  memccpy                                           
-0001359a  strchr                                            
-000135b6  strcmp                                            
-000135d2  _ZN8Cribbage2UIC1Ev                               
-000135d2  _ZN8Cribbage2UIC2Ev                               
-000135ec  _abort_msg                                        
-00013606  _ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE
-0001361e  __mspabi_mpyi_f5hw                                
-00013636  _ZN8Cribbage6PlayerC1Ev                           
-00013636  _ZN8Cribbage6PlayerC2Ev                           
-0001364c  memchr                                            
-00013662  memset                                            
-00013678  __mspabi_divu                                     
-00013678  __mspabi_remu                                     
-0001368e  _ZN8Cribbage10Controller6updateEv                 
-000136a2  _ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_ 
-000136b6  memcpy                                            
-000136ca  _ZN8Cribbage2UI12setCurrScoreEj                   
-000136dc  __mspabi_fixdu                                    
-000136ee  __TI_decompress_none                              
-00013700  strcpy                                            
-00013712  __mspabi_sral                                     
-00013722  __mspabi_slll                                     
-00013732  __mspabi_srll                                     
-00013742  strlen                                            
-00013750  _ZN2IO8InputPin4readEv                            
-0001375c  _ZN10__cxxabiv117__class_type_infoD0Ev            
-00013766  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
-00013770  _ZdaPv                                            
-00013770  _ZdlPv                                            
-0001377a  __mspabi_slli                                     
-00013784  _ZN8Cribbage13DisplayDriver3setEj                 
-0001378c  _ZN8Cribbage15updateLEDPOV_CBEPv                  
-00013794  _ZN8Cribbage5Turns11handleInputERNS_10ControllerE 
-0001379c  __cxa_pure_virtual                                
-000137a4  _ZN2IO8USCI_I2CC1Ev                               
-000137a4  _ZN2IO8USCI_I2CC2Ev                               
-000137aa  _ZN8Cribbage13DisplayDriver7disableEv             
-000137b0  _ZN8Cribbage2UI9setPlayerEj                       
-000137bc  C$$EXIT                                           
-000137bc  abort                                             
-000137c2  __TI_decompress_rle24                             
-000137c8  __abort_execution                                 
-000137d0  _system_pre_init                                  
-000137d4  _Z21__default_new_handlerv                        
-000137d6  _ZN10__cxxabiv117__class_type_infoD1Ev            
-000137d6  _ZN10__cxxabiv117__class_type_infoD2Ev            
-000137d8  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
-000137d8  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
-000137da  _ZN8Cribbage5Turns5enterERNS_10ControllerE        
-000137dc  _ZN8Cribbage5Turns6updateERNS_10ControllerE       
-000137de  _nop                                              
-000137e0  _system_post_cinit                                
+00011156  __mspabi_divd                                     
+000114aa  _ZN2IO8InputPin4initEdddd                         
+0001159c  fputs                                             
+0001168c  _ZN2IO8InputPin13fromInterruptEv                  
+00011774  setvbuf                                           
+0001192c  __TI_printfi_minimal                              
+000119fe  _ZN2IO8USCI_I2C11transactionEPjjPhj               
+00011ac8  _ZN8Cribbage13DisplayDriver12updateI2CCmdEv       
+00011b92  _Z12timer_createjiPFvPvES_                        
+00011c54  malloc                                            
+00011d0e  HOSTlseek                                         
+00011dc2  __TI_renormd                                      
+00011e74  main                                              
+00011f08  _ZN8Cribbage4Init11handleInputERNS_10ControllerE  
+00011f9a  fputc                                             
+00011f9a  putc                                              
+0001202a  _ZN8Cribbage13DisplayDriver7checkHWEv             
+000120b8  free                                              
+00012146  _Z10timer_initd                                   
+000121d2  _ZN2IO8InputPinC1EjjbNS_6PULLUP6PULLUPE           
+000121d2  _ZN2IO8InputPinC2EjjbNS_6PULLUP6PULLUPE           
+000122e0  _ZN8Cribbage10ControllerC1Ev                      
+000122e0  _ZN8Cribbage10ControllerC2Ev                      
+00012364  _auto_init_hold_wdt                               
+000123e6  __TI_wrt_ok                                       
+00012464  _ZN8Cribbage13DisplayDriver7setupHWEm             
+000124e0  __sti___8_main_cpp_UP                             
+0001255a  HOSTrename                                        
+000125ce  _ZN2IO8InputPin4initEv                            
+00012640  HOSTopen                                          
+000126b0  __TI_closefile                                    
+00012720  HOSTwrite                                         
+0001278c  HOSTread                                          
+000127f6  fseek                                             
+000128c8  __mspabi_fixdul                                   
+00012930  copy_in                                           
+00012996  __TI_doflush                                      
+000129fa  _Z11setUpTimersdd                                 
+00012a56  _ZN2IO8USCI_I2C4initEmmhjPVhh                     
+00012ab2  close                                             
+00012b66  fflush                                            
+00012bbe  __mspabi_divul                                    
+00012bbe  __mspabi_remul                                    
+00012c16  _ZN2IO8USCI_I2C9checkAddrEh                       
+00012c6c  HOSTclose                                         
+00012cba  _ZN8Cribbage5Turns11handleInputERNS_10ControllerE 
+00012d06  _ZN8Cribbage10Controller3runEv                    
+00012d50  exit                                              
+00012d9a  printf                                            
+00012e2c  HOSTunlink                                        
+00012e72  minit                                             
+00012eb4  __mspabi_sral_15                                  
+00012eb8  __mspabi_sral_14                                  
+00012ebc  __mspabi_sral_13                                  
+00012ec0  __mspabi_sral_12                                  
+00012ec4  __mspabi_sral_11                                  
+00012ec8  __mspabi_sral_10                                  
+00012ecc  __mspabi_sral_9                                   
+00012ed0  __mspabi_sral_8                                   
+00012ed4  __mspabi_sral_7                                   
+00012ed8  __mspabi_sral_6                                   
+00012edc  __mspabi_sral_5                                   
+00012ee0  __mspabi_sral_4                                   
+00012ee4  __mspabi_sral_3                                   
+00012ee8  __mspabi_sral_2                                   
+00012eec  __mspabi_sral_1                                   
+00012ef2  __mspabi_slll_15                                  
+00012ef6  __mspabi_slll_14                                  
+00012efa  __mspabi_slll_13                                  
+00012efe  __mspabi_slll_12                                  
+00012f02  __mspabi_slll_11                                  
+00012f06  __mspabi_slll_10                                  
+00012f0a  __mspabi_slll_9                                   
+00012f0e  __mspabi_slll_8                                   
+00012f12  __mspabi_slll_7                                   
+00012f16  __mspabi_slll_6                                   
+00012f1a  __mspabi_slll_5                                   
+00012f1e  __mspabi_slll_4                                   
+00012f22  __mspabi_slll_3                                   
+00012f26  __mspabi_slll_2                                   
+00012f2a  __mspabi_slll_1                                   
+00012f30  __mspabi_srll_15                                  
+00012f34  __mspabi_srll_14                                  
+00012f38  __mspabi_srll_13                                  
+00012f3c  __mspabi_srll_12                                  
+00012f40  __mspabi_srll_11                                  
+00012f44  __mspabi_srll_10                                  
+00012f48  __mspabi_srll_9                                   
+00012f4c  __mspabi_srll_8                                   
+00012f50  __mspabi_srll_7                                   
+00012f54  __mspabi_srll_6                                   
+00012f58  __mspabi_srll_5                                   
+00012f5c  __mspabi_srll_4                                   
+00012f60  __mspabi_srll_3                                   
+00012f64  __mspabi_srll_2                                   
+00012f68  __mspabi_srll_1                                   
+00012f6e  lseek                                             
+00012fac  __cxa_vec_ctor                                    
+00012fe8  write                                             
+00013024  __TI_cleanup                                      
+0001305a  __TI_writemsg                                     
+0001308c  C$$IO$$                                           
+00013090  _ZN8Cribbage13DisplayDriver12updateDrvCmdEv       
+000130c4  _Znaj                                             
+000130c4  _Znwj                                             
+000130f8  __TI_readmsg                                      
+0001312a  __mspabi_subd                                     
+0001315c  strncpy                                           
+0001318e  _ZN8Cribbage13DisplayDriver11wrCmdToDrvsEv        
+000131be  _ZN8Cribbage13DisplayDriverC1Ev                   
+000131be  _ZN8Cribbage13DisplayDriverC2Ev                   
+000131ee  remove                                            
+000131ee  unlink                                            
+0001324c  _ZN8Cribbage4Init6updateERNS_10ControllerE        
+00013276  __mpu_init                                        
+0001329e  __sti___19_cribbage_driver_cpp_1ff44c53           
+000132c6  _ZN8Cribbage10Controller5enterEv                  
+000132ea  _ZN8Cribbage13DisplayDriver4ctrlEjb               
+0001330e  __mspabi_mpyl_f5hw                                
+00013332  _ZN8Cribbage4Init5enterERNS_10ControllerE         
+00013354  _ZN8Cribbage5Turns5enterERNS_10ControllerE        
+00013376  _ZN8Cribbage10Controller11handleInputEv           
+00013394  _ZN8Cribbage13DisplayDriver5clearEv               
+000133b2  memccpy                                           
+000133d0  strchr                                            
+000133ec  strcmp                                            
+00013408  _ZN8Cribbage2UIC1Ev                               
+00013408  _ZN8Cribbage2UIC2Ev                               
+00013422  _abort_msg                                        
+0001343c  _ZN8Cribbage4Init11showEnabledEjbRNS_10ControllerE
+00013454  __mspabi_mpyi_f5hw                                
+0001346c  _ZN8Cribbage6PlayerC1Ev                           
+0001346c  _ZN8Cribbage6PlayerC2Ev                           
+00013482  memchr                                            
+00013498  memset                                            
+000134ae  __mspabi_divu                                     
+000134ae  __mspabi_remu                                     
+000134c4  _ZN8Cribbage10Controller6updateEv                 
+000134d8  _ZN8Cribbage13DisplayDriver15updateLEDMatrixEPS0_ 
+000134ec  memcpy                                            
+00013500  _ZN8Cribbage2UI12setCurrScoreEj                   
+00013512  __mspabi_fixdu                                    
+00013524  __TI_decompress_none                              
+00013536  strcpy                                            
+00013548  __mspabi_sral                                     
+00013558  __mspabi_slll                                     
+00013568  __mspabi_srll                                     
+00013578  strlen                                            
+00013586  _ZN2IO8InputPin4readEv                            
+00013592  _ZN10__cxxabiv117__class_type_infoD0Ev            
+0001359c  _ZN10__cxxabiv120__si_class_type_infoD0Ev         
+000135a6  _ZN8Cribbage10Controller7sysInitEm                
+000135b0  _ZdaPv                                            
+000135b0  _ZdlPv                                            
+000135ba  __mspabi_slli                                     
+000135c4  _ZN8Cribbage13DisplayDriver3setEj                 
+000135cc  _ZN8Cribbage15updateLEDPOV_CBEPv                  
+000135d4  __cxa_pure_virtual                                
+000135dc  _ZN2IO8USCI_I2CC1Ev                               
+000135dc  _ZN2IO8USCI_I2CC2Ev                               
+000135e2  _ZN8Cribbage13DisplayDriver7disableEv             
+000135e8  _ZN8Cribbage2UI9setPlayerEj                       
+000135f4  C$$EXIT                                           
+000135f4  abort                                             
+000135fa  __TI_decompress_rle24                             
+00013600  __abort_execution                                 
+00013608  _system_pre_init                                  
+0001360c  _Z21__default_new_handlerv                        
+0001360e  _ZN10__cxxabiv117__class_type_infoD1Ev            
+0001360e  _ZN10__cxxabiv117__class_type_infoD2Ev            
+00013610  _ZN10__cxxabiv120__si_class_type_infoD1Ev         
+00013610  _ZN10__cxxabiv120__si_class_type_infoD2Ev         
+00013612  _ZN8Cribbage5Turns6updateERNS_10ControllerE       
+00013614  _nop                                              
+00013616  _system_post_cinit                                
 ffffffff  __TI_pprof_out_hndl                               
 ffffffff  __TI_prof_data_size                               
 ffffffff  __TI_prof_data_start                              
