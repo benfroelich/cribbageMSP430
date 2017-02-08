@@ -100,7 +100,7 @@ namespace Cribbage
 	{
 	public:
 		DisplayDriver();
-		void setupHW(const uint32_t F_MCLKhw = 8e6);	// setup I2C
+		void setupHW(const uint32_t &F_MCLK = 8e6);	// setup I2C
 		bool checkHW();
 		void clear();
 		void clear(unsigned LED);
@@ -194,7 +194,7 @@ namespace Cribbage
 	public:
 		Controller();
 		// init driver, game status, and hardware
-		void sysInit(const uint32_t F_MCLKsys);
+		void sysInit(const uint32_t &F_MCLK);
 		void run();	// run a pass of the state machine
 		virtual void enter();
 		// figure out what the next state will be

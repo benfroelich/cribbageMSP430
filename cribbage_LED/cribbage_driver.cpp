@@ -30,10 +30,10 @@ Cribbage::DisplayDriver::DisplayDriver() :
 	clear();
 	disable();
 }
-void Cribbage::DisplayDriver::setupHW(const uint32_t F_MCLKhw)
+void Cribbage::DisplayDriver::setupHW(const uint32_t &F_MCLK)
 {
 	// initialize the I2C driver
-	IO::i2c.init(F_MCLKhw, F_I2C, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
+	IO::i2c.init(F_MCLK, F_I2C, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
 	// create a timer to update the POV display
 	timer_handle = timer_create(1000/F_POV, 1000/F_POV, updateLEDPOV_CB, this);
 	this->initialized = true;
@@ -215,10 +215,10 @@ Cribbage::Controller::Controller()
 		this->players[plr] = &players_g[plr];
 	}
 }
-void Cribbage::Controller::sysInit(const uint32_t F_MCLKsys)
+void Cribbage::Controller::sysInit(const uint32_t &F_MCLK)
 {
 	// initialize the driver HW resources
-	ui.setupHW(F_MCLKsys);
+	ui.setupHW(F_MCLK);
 }
 void Cribbage::Controller::run()
 {
