@@ -1,0 +1,58 @@
+\hypertarget{class_cribbage_1_1_display_driver}{}\section{Cribbage\+:\+:Display\+Driver Class Reference}
+\label{class_cribbage_1_1_display_driver}\index{Cribbage\+::\+Display\+Driver@{Cribbage\+::\+Display\+Driver}}
+
+
+controls the driver matrix  
+
+
+
+
+{\ttfamily \#include $<$cribbage\+\_\+\+L\+E\+D.\+h$>$}
+
+Inheritance diagram for Cribbage\+:\+:Display\+Driver\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_cribbage_1_1_display_driver}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_ac9217d6e9244d5a8655e34b5919266fa}\label{class_cribbage_1_1_display_driver_ac9217d6e9244d5a8655e34b5919266fa}} 
+void {\bfseries setup\+HW} (double F\+\_\+\+M\+C\+LK=8e6)
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_a916e691820f3dc18cb536983be2d2167}\label{class_cribbage_1_1_display_driver_a916e691820f3dc18cb536983be2d2167}} 
+bool {\bfseries check\+HW} ()
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_a5b90d7c871e89553f92d7c53cf986684}\label{class_cribbage_1_1_display_driver_a5b90d7c871e89553f92d7c53cf986684}} 
+void {\bfseries clear} ()
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_a15b35b5e8a79eff7807537f5eb93c361}\label{class_cribbage_1_1_display_driver_a15b35b5e8a79eff7807537f5eb93c361}} 
+void {\bfseries clear} (unsigned L\+ED)
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_ac4599507901396eefe0f3b1e3f5ecf4f}\label{class_cribbage_1_1_display_driver_ac4599507901396eefe0f3b1e3f5ecf4f}} 
+void {\bfseries set} (unsigned L\+ED)
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_ae973c526c59eac9b4993e706690df865}\label{class_cribbage_1_1_display_driver_ae973c526c59eac9b4993e706690df865}} 
+void {\bfseries ctrl} (unsigned L\+ED, bool on)
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_a72c8a60aa48465d4393e0e18a7db83bf}\label{class_cribbage_1_1_display_driver_a72c8a60aa48465d4393e0e18a7db83bf}} 
+void {\bfseries enable} ()
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_afb8bdd33502ff7fbbcd9776f57ec4e53}\label{class_cribbage_1_1_display_driver_afb8bdd33502ff7fbbcd9776f57ec4e53}} 
+void {\bfseries disable} ()
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_display_driver_a18ce27a00334e2d2bf4d1bababd60c39}\label{class_cribbage_1_1_display_driver_a18ce27a00334e2d2bf4d1bababd60c39}} 
+void \hyperlink{class_cribbage_1_1_display_driver_a18ce27a00334e2d2bf4d1bababd60c39}{update\+L\+E\+D\+Matrix} (\hyperlink{class_cribbage_1_1_display_driver}{Display\+Driver} $\ast$obj)
+\begin{DoxyCompactList}\small\item\em called from timer to update the P\+OV matrix \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+controls the driver matrix 
+
+this driver control the L\+ED persistence-\/of-\/vision matrix via I2C. It strobes the L\+ED\textquotesingle{}s at a fixed frequency by enabling each appropriate anode for a cathode and then turning the cathode on. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cribbage\+\_\+\+L\+E\+D.\+h\item 
+cribbage\+\_\+driver.\+cpp\end{DoxyCompactItemize}

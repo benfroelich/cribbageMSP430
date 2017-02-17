@@ -30,8 +30,9 @@ namespace Cribbage
 	public:
 		Player();
 		/** \brief add points to the players score
-		 *  \details make sure it doesn't undeflow*/
-		void addPts(int pts) { if(pts >= -1*score) score += pts; };
+		 *  \details make sure it doesn't underflow by checking for score + pts >=0
+		 */
+		void addPts(int pts) { if((int)score + pts >= 0) score += pts; };
 		unsigned getPts() { return score; };
 		void setPts(unsigned pts) {score = pts; };
 		//Player* next();
@@ -100,7 +101,8 @@ namespace Cribbage
 	{
 	public:
 		DisplayDriver();
-		void setupHW(const uint32_t &F_MCLK = 8e6);	// setup I2C
+		void setUpdateFlg();
+		void setupHW(const uint16_t &F_MCLK_KHZ = 8e3);	// setup I2C
 		bool checkHW();
 		void clear();
 		void clear(unsigned LED);
@@ -109,12 +111,12 @@ namespace Cribbage
 		void enable();	// enable the matrix
 		void disable();	// disable the matrix
 		/// called from timer to update the POV matrix
-		void updateLEDMatrix(DisplayDriver *obj);
+		void updateLEDMatrix();
 	private:
 		// I2C frequency
-		const uint32_t F_I2C;
+		const uint16_t F_I2C_KHZ;
 		/// persistance of vision update frequency in Hz
-		const uint32_t F_POV;
+		const uint16_t F_POV;
 		// 24 anode x 20 cathode matrix driven by IO expanders
 		static const int NUM_ANODES = 24;
 		static const int NUM_CATHODES = 20;
@@ -146,6 +148,8 @@ namespace Cribbage
 		uint16_t driverCmd[SEQ_LEN];
 		char LEDStates[NUM_LEDS];
 		uint8_t drvBits[NUM_LED_DRIVERS];
+		// flag from ISR indicating that POV period has elapsed.
+		bool updateFlg;
 		// flag between driver I2C sequence writer and transmitter to signal
 		// when an new transmission is ready
 		bool newCmdReady;
@@ -194,7 +198,7 @@ namespace Cribbage
 	public:
 		Controller();
 		// init driver, game status, and hardware
-		void sysInit(const uint32_t &F_MCLK);
+		void sysInit(const uint16_t &F_MCLK);
 		void run();	// run a pass of the state machine
 		virtual void enter();
 		// figure out what the next state will be
@@ -211,5 +215,8 @@ namespace Cribbage
 		UI ui;
 		unsigned numPlayersChosen;
 	};
+
+    inline void DisplayDriver::setUpdateFlg() { this->updateFlg = true; };
+
 };	// namespace Cribbage
 #endif

@@ -1,0 +1,42 @@
+\hypertarget{class_i_o_1_1_u_s_c_i___i2_c}{}\section{IO\+:\+:U\+S\+C\+I\+\_\+\+I2C Class Reference}
+\label{class_i_o_1_1_u_s_c_i___i2_c}\index{I\+O\+::\+U\+S\+C\+I\+\_\+\+I2C@{I\+O\+::\+U\+S\+C\+I\+\_\+\+I2C}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_acdc4d71c6a97cbb44417281de550d7c8}\label{class_i_o_1_1_u_s_c_i___i2_c_acdc4d71c6a97cbb44417281de550d7c8}} 
+enum {\bfseries C\+M\+D\+\_\+\+T\+Y\+PE} \{ \newline
+{\bfseries A\+D\+D\+R\+\_\+\+RD} = 1$<$$<$8, 
+{\bfseries A\+D\+D\+R\+\_\+\+WR} = 1$<$$<$9, 
+{\bfseries D\+A\+TA} = 1$<$$<$10, 
+{\bfseries S\+T\+A\+RT} = 1$<$$<$11, 
+\newline
+{\bfseries S\+T\+OP} = 1$<$$<$12
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_a7ec765a989cbd4ef3b6145697aecea66}\label{class_i_o_1_1_u_s_c_i___i2_c_a7ec765a989cbd4ef3b6145697aecea66}} 
+void {\bfseries init} (double F\+\_\+\+M\+C\+LK, double F\+\_\+\+I2C, uint8\+\_\+t default\+Address, unsigned busy\+Cnts=0, volatile unsigned char $\ast$S\+E\+L\+\_\+\+P\+O\+RT=0, uint8\+\_\+t P\+I\+NS=0)
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_add34820575163155db117e95119c7bd7}\label{class_i_o_1_1_u_s_c_i___i2_c_add34820575163155db117e95119c7bd7}} 
+bool {\bfseries transaction} (uint16\+\_\+t $\ast$seq, uint16\+\_\+t seq\+Len, uint8\+\_\+t $\ast$recv\+Data, uint16\+\_\+t wakeup\+S\+R\+Bits)
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_ac2c75cd3de282a82042fc72e19d344fd}\label{class_i_o_1_1_u_s_c_i___i2_c_ac2c75cd3de282a82042fc72e19d344fd}} 
+bool {\bfseries done} ()
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_a21e4e5de305f5d4c7c3c7cf82067dc51}\label{class_i_o_1_1_u_s_c_i___i2_c_a21e4e5de305f5d4c7c3c7cf82067dc51}} 
+bool {\bfseries check\+Addr} (uint8\+\_\+t addr)
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_abc3339929b114e7f04448fde955f64cb}\label{class_i_o_1_1_u_s_c_i___i2_c_abc3339929b114e7f04448fde955f64cb}} 
+void {\bfseries handle\+Tx\+Rx\+Int} (bool is\+Wr\+Int)
+\item 
+\mbox{\Hypertarget{class_i_o_1_1_u_s_c_i___i2_c_a2781f9194474979eff5f1376cb77cef8}\label{class_i_o_1_1_u_s_c_i___i2_c_a2781f9194474979eff5f1376cb77cef8}} 
+void {\bfseries start\+Seq} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+U\+S\+C\+I\+I2\+C.\+h\item 
+U\+S\+C\+I\+I2\+C.\+cpp\end{DoxyCompactItemize}

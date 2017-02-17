@@ -4,7 +4,7 @@
 #include "cribbage_LED.h"
 #include "timer.h"
 #include <cassert>
-#include <stdio.h>
+//#include <stdio.h>
 
 // define the externally declared I2C object here to claim it
 IO::USCI_I2C IO::i2c;
@@ -20,7 +20,7 @@ Cribbage::Player::Player()
 }
 //////////// begin Cribbage::DisplayDriver
 Cribbage::DisplayDriver::DisplayDriver() :
-		F_I2C(100e3),
+		F_I2C_KHZ(100),
 		F_POV(60),
 		cathodeIt(0),
 		newCmdReady(false)
@@ -30,10 +30,10 @@ Cribbage::DisplayDriver::DisplayDriver() :
 	clear();
 	disable();
 }
-void Cribbage::DisplayDriver::setupHW(const uint32_t &F_MCLK)
+void Cribbage::DisplayDriver::setupHW(const uint16_t &F_MCLK_KHZ)
 {
 	// initialize the I2C driver
-	IO::i2c.init(F_MCLK, F_I2C, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
+	IO::i2c.init(F_MCLK_KHZ, F_I2C_KHZ, BASE_I2C_ADDR, 10, &P1SEL1, (BIT6 | BIT7));
 	// create a timer to update the POV display
 	timer_handle = timer_create(1000/F_POV, 1000/F_POV, updateLEDPOV_CB, this);
 	this->initialized = true;
@@ -50,13 +50,13 @@ bool Cribbage::DisplayDriver::checkHW()
 		if(!IO::i2c.checkAddr(BASE_I2C_ADDR + bank))
 		{
 			LEDDriverCommEstablished[bank] = false;
-			printf("checkHW: error! could not establish "
-					"communication with driver %d\n", bank);
+			//printf("checkHW: error! could not establish "
+			//		"communication with driver %d\n", bank);
 			stat = false;
 		}
-		else
-			printf("checkHW: established communication with"
-					" driver %d - it's party time!\n", bank);
+		else {}
+			//printf("checkHW: established communication with"
+			//		" driver %d - it's party time!\n", bank);
 	}
 	return stat;
 }
@@ -89,12 +89,12 @@ void Cribbage::DisplayDriver::disable()
 void Cribbage::updateLEDPOV_CB(void *arg)
 {
 	DisplayDriver * that = (DisplayDriver*)arg;
-	that->updateLEDMatrix(that);
+	that->setUpdateFlg();
 }
-void Cribbage::DisplayDriver::updateLEDMatrix(DisplayDriver * obj)
+void Cribbage::DisplayDriver::updateLEDMatrix()
 {
-	obj->updateI2CCmd();
-	obj->wrCmdToDrvs();
+	updateI2CCmd();
+	wrCmdToDrvs();
 }
 void Cribbage::DisplayDriver::updateI2CCmd()
 {
@@ -215,21 +215,25 @@ Cribbage::Controller::Controller()
 		this->players[plr] = &players_g[plr];
 	}
 }
-void Cribbage::Controller::sysInit(const uint32_t &F_MCLK)
+void Cribbage::Controller::sysInit(const uint16_t &F_MCLK_KHZ)
 {
 	// initialize the driver HW resources
-	ui.setupHW(F_MCLK);
+	ui.setupHW(F_MCLK_KHZ);
 }
 void Cribbage::Controller::run()
 {
-	assert(currState);
-	enter();
-	handleInput();
-	update();
-	// update states
-	prevState = currState;
-	currState = nextState;
-	nextState = 0;	// current state must update next state!
+    if(1/*gameFlag*/)
+    {
+        assert(currState);
+        enter();
+        handleInput();
+        update();
+        // update states
+        prevState = currState;
+        currState = nextState;
+        nextState = 0;	// current state must update next state!
+    }
+    this->ui.updateLEDMatrix();
 }
 void Cribbage::Controller::enter()
 {

@@ -13,7 +13,38 @@ IO::USCI_I2C::USCI_I2C()
 	this->state = IDLE;
 }
 
+/**
+ * \brief   initialize the I2C channel
+ * \detail  inline function to prevent stack overflow and make operation faster
+ *          call infrequently
+ *   */
+void IO::USCI_I2C::init(
+        const uint16_t &F_MCLK_KHZ,
+        const uint16_t &F_I2C_KHZ,
+        const uint8_t &defaultAddress,
+        const unsigned &busyCnts,
+        volatile unsigned char *SEL_PORT,
+        uint8_t PINS)
+{
+    uint16_t div = F_MCLK_KHZ/F_I2C_KHZ;
 
+    this->busyCnts = busyCnts;
+    if(this->busyCnts == 0) this->busyCnts = 1;
+    this->defAddr = defaultAddress;
+    // configure I2C pins, e.g. P1SEL1 |= (BIT6 | BIT7)
+    *SEL_PORT |= PINS;
+    // put eUSCI_B in reset state while we config it
+    UCB0CTLW0 = UCSWRST;
+    // use SMCLK as clock source, I2C Mode, send I2C stop
+    UCB0CTLW0 |= UCMODE_3 | UCMST | UCSSEL__SMCLK;
+    assert(div > 1);
+    UCB0BRW = (uint16_t)div;    // set I2C frequency
+    UCB0I2CSA = defaultAddress;     // client address
+    //UCB0CTLW1 |= UCCLTO_3;    // timeout after ~34ms
+    UCB0CTLW0 &= ~UCSWRST;  // put eUSCI_B in operational state
+    // enable TX interrupt and NACK interrupt
+    UCB0IE |= UCTXIE0 | UCNACKIE | UCRXIE0 /*| UCCLTOIE*/;
+}
 void IO::USCI_I2C::waitForBusFree() {
 	unsigned cnt = 0;
 	while (UCB0STAT & UCBBUSY)

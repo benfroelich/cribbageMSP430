@@ -1,0 +1,39 @@
+\hypertarget{class_cribbage_1_1_state}{}\section{Cribbage\+:\+:State Class Reference}
+\label{class_cribbage_1_1_state}\index{Cribbage\+::\+State@{Cribbage\+::\+State}}
+
+
+Game sequence state abstract class.  
+
+
+
+
+{\ttfamily \#include $<$cribbage\+\_\+\+L\+E\+D.\+h$>$}
+
+Inheritance diagram for Cribbage\+:\+:State\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_cribbage_1_1_state}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_state_af670b627a30cae912bde279f58b7e8e1}\label{class_cribbage_1_1_state_af670b627a30cae912bde279f58b7e8e1}} 
+virtual void {\bfseries enter} (\hyperlink{class_cribbage_1_1_controller}{Controller} \&ctrlr)=0
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_state_a40c63cd7f9765daed9cca3dec9914ef9}\label{class_cribbage_1_1_state_a40c63cd7f9765daed9cca3dec9914ef9}} 
+virtual \hyperlink{class_cribbage_1_1_state}{State} $\ast$ {\bfseries handle\+Input} (\hyperlink{class_cribbage_1_1_controller}{Controller} \&ctrlr)=0
+\item 
+\mbox{\Hypertarget{class_cribbage_1_1_state_a625cb84913f9c379aa734206bd8b901a}\label{class_cribbage_1_1_state_a625cb84913f9c379aa734206bd8b901a}} 
+virtual void {\bfseries update} (\hyperlink{class_cribbage_1_1_controller}{Controller} \&ctrlr)=0
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Game sequence state abstract class. 
+
+Used as a base class for the states in the F\+SM. Allows specialization of the states while standardizing their interface 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+cribbage\+\_\+\+L\+E\+D.\+h\end{DoxyCompactItemize}

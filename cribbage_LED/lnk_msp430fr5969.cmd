@@ -189,7 +189,7 @@ SECTIONS
     .bss        : {} > RAM                  /* Global & static vars              */
     .data       : {} > RAM                  /* Global & static vars              */
     .TI.noinit  : {} > RAM                  /* For #pragma noinit                */
-    .stack      : {} > RAM (HIGH)           /* Software system stack             */
+    .stack      : {} > RAM (HIGH)          /* Software system stack             */
 
     .infoA     : {} > INFOA              /* MSP430 INFO FRAM  Memory segments */
     .infoB     : {} > INFOB

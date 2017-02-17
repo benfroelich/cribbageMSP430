@@ -34,15 +34,16 @@ IO::InputPin
 #endif
 
 // local function declarations
-void setUpTimers(const double F_CLK, const double F_PIN_INTERRUPT);
-void setUpPins(const double F_PIN_INTERRUPT);
+void setUpTimers(const uint32_t F_CLK, const uint32_t F_PIN_INTERRUPT);
+void setUpPins(const uint32_t F_PIN_INTERRUPT);
+
+Cribbage::Controller game;
 
 int main(void)
 {
-	Cribbage::Controller game;
 	const unsigned F_PIN_INTERRUPT = 500; // pin interrupt frequency [Hz]
-	const unsigned F_ACLK = 10e3;
-	const uint32_t F_MCLK = 8e6;			// desired MCLK frequency [Hz]
+	const unsigned F_ACLK_KHZ = 10;
+	const uint16_t F_MCLK_KHZ = 8e3;			// desired MCLK frequency [Hz]
 
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
@@ -54,15 +55,15 @@ int main(void)
 	CSCTL2 |= SELA__VLOCLK | SELM__DCOCLK;
 
     // setup timers for input debouncing
-    setUpTimers(F_ACLK, F_PIN_INTERRUPT);
-    timer_init(F_MCLK);
+    setUpTimers(F_ACLK_KHZ*1000, F_PIN_INTERRUPT);
+    timer_init(F_MCLK_KHZ);
     // init inputs
     setUpPins(F_PIN_INTERRUPT);
 	// clear lock on port settings
     PM5CTL0 &= ~LOCKLPM5;
 
     // setup and check HW:
-    game.sysInit(F_MCLK);
+    game.sysInit(F_MCLK_KHZ);
 #ifdef LAUNCHPAD
 
     // TODO: remove, this is just for debugging I2C
@@ -113,10 +114,10 @@ int main(void)
 //////////////////////////////////////////////////////////////
 // main support functions and ISRs
 //////////////////////////////////////////////////////////////
-void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
+void setUpTimers(uint32_t F_CLK, uint32_t F_PIN_INTERRUPT)
 //void setUpTimers(const double F_CLK)
 {
-	TA0CCR0 = F_CLK/8/F_PIN_INTERRUPT;
+	TA0CCR0 = F_CLK*1000/8/F_PIN_INTERRUPT;
 	TA0CCR1 = 0xFFFF;
 	TA0CCR2 = 0xFFFF;
 	// SMCLK, /8, count to CCR0, enable interrupts
@@ -124,8 +125,7 @@ void setUpTimers(double F_CLK, double F_PIN_INTERRUPT)
 	// enable interrupt for TA0 CCR0
 	TA0CCTL0 = CCIE;
 }
-void setUpPins(const double F_PIN_INTERRUPT)
-//void setUpPins()
+void setUpPins(const uint32_t F_PIN_INTERRUPT)
 {
 	double t_int_ms = 1.0 / (double)F_PIN_INTERRUPT * 1000.0;
 	// link the pins defined here to cribbage library,
