@@ -27,6 +27,8 @@ Cribbage::DisplayDriver::DisplayDriver() :
 {
 	// set up variables
 	this->initialized = false;
+	/// initialize the I2C command sequence
+	setupI2CSeq();
 	clear();
 	disable();
 }
@@ -90,6 +92,24 @@ void Cribbage::updateLEDPOV_CB(void *arg)
 {
 	DisplayDriver * that = (DisplayDriver*)arg;
 	that->setUpdateFlg();
+}
+void Cribbage::DisplayDriver::setupI2CSeq()
+{
+    for(unsigned cmd = 0; cmd < SEQ_LEN; cmd += CMDS_PER_DRV)
+    {
+        /// setup driver transaction
+        // address
+        driverCmd[cmd + 0] = IO::USCI_I2C::ADDR_WR | \
+           this->BASE_I2C_ADDR + cmd/CMDS_PER_DRV;
+        driverCmd[cmd + 1] |= IO::USCI_I2C::DATA | OUTPUT_REG;
+        driverCmd[cmd + 2] |= IO::USCI_I2C::DATA;
+
+        /// setup initialization sequence
+        // same addresses for same devices
+        initCmd[cmd + 0] = driverCmd[cmd + 0];
+        initCmd[cmd + 1] |= IO::USCI_I2C::DATA | CFG_REG;
+        initCmd[cmd + 2] |= IO::USCI_I2C::DATA | 0xFF;
+    }
 }
 void Cribbage::DisplayDriver::updateLEDMatrix()
 {

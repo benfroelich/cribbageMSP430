@@ -44,6 +44,7 @@ void IO::USCI_I2C::init(
     UCB0CTLW0 &= ~UCSWRST;  // put eUSCI_B in operational state
     // enable TX interrupt and NACK interrupt
     UCB0IE |= UCTXIE0 | UCNACKIE | UCRXIE0 /*| UCCLTOIE*/;
+    this->state = IDLE;
 }
 void IO::USCI_I2C::waitForBusFree() {
 	unsigned cnt = 0;
@@ -151,6 +152,7 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 	// set current command here so we don't read outside the array
 	// if we were at the end of the sequence
 	curCmd = seq[seqCtr];
+	assert(isAddr(curCmd) || isData(curCmd));
 	// 1. check for address:
 	if(isAddr(curCmd))
 	{
@@ -170,7 +172,6 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 	if(isWrInt)
 	{
 		// write data from the sequence entry to the transmitter buffer
-	//	UCB0TXBUF = (uint8_t)curSeq; // causes intermittent data loss :o cmds get truncated to 8 bits!
 		UCB0TXBUF = curCmd;
 	}
 	// this is the read interrupt handler

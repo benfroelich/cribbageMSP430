@@ -54,8 +54,9 @@ int main(void)
 	// VLO -> ACLK, DCO -> MCLK,
 	CSCTL2 |= SELA__VLOCLK | SELM__DCOCLK;
 
-    // setup timers for input debouncing
+    // set up timers for input debouncing
     setUpTimers(F_ACLK_KHZ*1000, F_PIN_INTERRUPT);
+    // set up timers for general purpose function calls
     timer_init(F_MCLK_KHZ);
     // init inputs
     setUpPins(F_PIN_INTERRUPT);

@@ -113,6 +113,8 @@ namespace Cribbage
 		/// called from timer to update the POV matrix
 		void updateLEDMatrix();
 	private:
+		/// called from constructor to initialize the I2C sequence array
+		void setupI2CSeq();
 		// I2C frequency
 		const uint16_t F_I2C_KHZ;
 		/// persistance of vision update frequency in Hz
@@ -122,8 +124,11 @@ namespace Cribbage
 		static const int NUM_CATHODES = 20;
 		static const int NUM_LEDS = NUM_ANODES*NUM_CATHODES;
 		static const int NUM_LED_DRIVERS = 6;	// 6 LED drivers
-		// the base I2C address for the LED drivers
+		/// I2C constants
+		// the base I2C address for the LED drivers, see PCA9534 datasheet
 		static const int BASE_I2C_ADDR = 0x40>>1;
+		// register addresses
+		static const int OUTPUT_REG = 0x01, CFG_REG = 0x03;
 		// the command sequence to updat the LED's will require
 		// three commands per driver: ADDR, PTR, DATA
 		static const int CMDS_PER_DRV = 3;
@@ -145,7 +150,10 @@ namespace Cribbage
 			char ch;	// IO expander channel that this LED pin is connected to
 		} DrvMap_t;
 		static const DrvMap_t anodes[NUM_ANODES], cathodes[NUM_CATHODES];
+		/// reused I2C transaction to switch the LEDs
 		uint16_t driverCmd[SEQ_LEN];
+		/// I2C transaction to initialize the driver pins as outputs
+		uint16_t initCmd[SEQ_LEN];
 		char LEDStates[NUM_LEDS];
 		uint8_t drvBits[NUM_LED_DRIVERS];
 		// flag from ISR indicating that POV period has elapsed.
