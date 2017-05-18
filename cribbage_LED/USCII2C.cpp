@@ -131,11 +131,12 @@ inline void IO::USCI_I2C::startSeq()
 	else if(isWrAddr(curSeq)) startWr();
 	seqCtr++;
 }
-inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
+inline void IO::USCI_I2C::handleTxRxInt(const int & isWrInt)
 {
 	// TODO: make class private variable?
 	uint16_t curCmd;
 	uint16_t prevCmd;
+	unsigned dataRead = 0x00;
 	// only set prevCmd if we aren't at the beginning.
 	if(seqCtr > 0) prevCmd = seq[seqCtr-1];
 
@@ -169,17 +170,12 @@ inline void IO::USCI_I2C::handleTxRxInt(bool isWrInt)
 		curCmd = seq[++seqCtr];
 	}
 	// check for a data byte to TX/RX
-	if(isWrInt)
-	{
-		// write data from the sequence entry to the transmitter buffer
-		UCB0TXBUF = curCmd;
-	}
-	// this is the read interrupt handler
-	else if(!isWrInt)
-	{
-		// TODO: grab data from register
-		unsigned dataRead = UCB0RXBUF;
-	}
+	// write data from the sequence entry to the transmitter buffer
+	else if(isWrInt)
+	    UCB0TXBUF = curCmd;
+	// this is the read interrupt handler, // TODO: grab data from register
+	else
+		dataRead = UCB0RXBUF;
 	// increment sequence counter in preparation for the next interrupt
 	seqCtr++;
 }
@@ -211,11 +207,11 @@ __interrupt void EUSCI_B0(void)
 	case USCI_I2C_UCRXIFG1:  break;     // Vector 18: RXIFG1
 	case USCI_I2C_UCTXIFG1:  break;     // Vector 20: TXIFG1
 	case USCI_I2C_UCRXIFG0: 		    // Vector 22: RXIFG0 - received data is ready
-		IO::i2c.handleTxRxInt(false);
+		IO::i2c.handleTxRxInt(0);
 		break;
 	case USCI_I2C_UCTXIFG0:             // Vector 24: TXIFG0
 		// we completed a transaction, check for the next cmd
-		IO::i2c.handleTxRxInt(true);
+		IO::i2c.handleTxRxInt(1);
 		break;
 	default: break;
 	}

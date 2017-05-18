@@ -53,7 +53,7 @@ namespace IO
 		//	- replaced master-slave terminology w/ coordinator-client
 		bool checkAddr(uint8_t addr);
 		// used by ISR
-		inline void handleTxRxInt(bool isWrInt);
+		inline void handleTxRxInt(const int & isWrInt);
 		inline void startSeq();
 	private:
 		// check the flag set in the data packet

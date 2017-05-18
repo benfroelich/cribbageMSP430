@@ -12,7 +12,11 @@
 //#define LAUNCHPAD
 //#define USING_CTPL
 
+// switch to transmit a dummy transaction for debugging I2C
+#define DUMMY_TX
+
 #ifdef LAUNCHPAD
+#define DUMMY_TX
 // connect inputs to the two buttons on the cribbage board and also some other
 // unused pins
 IO::InputPin
@@ -65,9 +69,7 @@ int main(void)
 
     // setup and check HW:
     game.sysInit(F_MCLK_KHZ);
-#ifdef LAUNCHPAD
-
-    // TODO: remove, this is just for debugging I2C
+#ifdef DUMMY_TX
     uint16_t dummyTransaction[] =
     {
 			0x40>>1 	| IO::USCI_I2C::ADDR_WR,	// set address
@@ -105,7 +107,10 @@ int main(void)
 		}
 		_BIS_SR(LPM0_bits);	// enter LPM0
 #else
-		game.run();
+#ifdef DUMMY_TX
+        IO::i2c.transaction(dummyTransaction, sizeof(dummyTransaction)/sizeof(dummyTransaction[0]), 0, 0);
+#endif
+		//game.run();
 #endif	// LAUNCHPAD
 	}
 
