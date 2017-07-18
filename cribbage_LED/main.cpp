@@ -109,6 +109,7 @@ int main(void)
 #else
 #ifdef DUMMY_TX
         IO::i2c.transaction(dummyTransaction, sizeof(dummyTransaction)/sizeof(dummyTransaction[0]), 0, 0);
+        _delay_cycles(1000000);
 #endif
 		//game.run();
 #endif	// LAUNCHPAD

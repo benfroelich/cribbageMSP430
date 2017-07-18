@@ -64,10 +64,10 @@ void IO::USCI_I2C::waitForBusFree() {
 bool IO::USCI_I2C::transaction(uint16_t *seq, uint16_t seqLen,
 		uint8_t *recvData = NULL, uint16_t wakeupSRBits = 0)
 {
+    // we can't start another sequence until the current one is done
 	if(!done()) return false;
-	// we can't start another sequence until the current one is done
+	// done, but bus is busy, so send a stop
 	if(UCB0STAT & UCBBUSY)
-		// send a stop
 		UCB0CTLW0 |= UCTXSTP;
 	waitForBusFree();
 	// load the sequence into the library:
@@ -99,7 +99,7 @@ bool IO::USCI_I2C::checkAddr(uint8_t addr)
 {
 	uint8_t clientAddrBak, UCB0IEBak;
 	bool present;
-	UCB0IEBak = UCB0IE;                      // restore old UCB0I2CIE
+	UCB0IEBak = UCB0IE;                      // store old UCB0I2CIE
 	clientAddrBak = UCB0I2CSA;                   // store old slave address
 	UCB0IE &= ~ UCNACKIE;                    // no NACK interrupt
 	UCB0I2CSA = addr;                  // set slave address
@@ -131,7 +131,7 @@ inline void IO::USCI_I2C::startSeq()
 	else if(isWrAddr(curSeq)) startWr();
 	seqCtr++;
 }
-inline void IO::USCI_I2C::handleTxRxInt(const int & isWrInt)
+inline void IO::USCI_I2C::handleTxRxInt(int isWrInt)
 {
 	// TODO: make class private variable?
 	uint16_t curCmd;
@@ -158,12 +158,14 @@ inline void IO::USCI_I2C::handleTxRxInt(const int & isWrInt)
 	if(isAddr(curCmd))
 	{
 		UCB0I2CSA = (uint8_t)curCmd;
-		/* "Setting UCTXSTT generates a repeated START condition. In this case,
+		/* "Setting UCTXSTT generates a repeated START condition.
+		 In this case,
 		 UCTR may be set or cleared to configure transmitter or receiver,
 		 and a different slave address may be written into UCBxI2CSA, if
-		 desired." */
-		// to accomplish this, send a start write or start read command
-		// this will set the UCTR flag appropriately and set the start bit
+		 desired."
+
+		to accomplish this, send a start write or start read command
+		this will set the UCTR flag appropriately and set the start bit */
 		if(isWrAddr(curCmd)) 	startWr();
 		else 					startRd();
 		// addr - continue processing tx
@@ -171,7 +173,7 @@ inline void IO::USCI_I2C::handleTxRxInt(const int & isWrInt)
 	}
 	// check for a data byte to TX/RX
 	// write data from the sequence entry to the transmitter buffer
-	else if(isWrInt)
+	if(isWrInt)
 	    UCB0TXBUF = curCmd;
 	// this is the read interrupt handler, // TODO: grab data from register
 	else
@@ -207,8 +209,8 @@ __interrupt void EUSCI_B0(void)
 	case USCI_I2C_UCRXIFG1:  break;     // Vector 18: RXIFG1
 	case USCI_I2C_UCTXIFG1:  break;     // Vector 20: TXIFG1
 	case USCI_I2C_UCRXIFG0: 		    // Vector 22: RXIFG0 - received data is ready
-		IO::i2c.handleTxRxInt(0);
-		break;
+	    IO::i2c.handleTxRxInt(0);
+ 		break;
 	case USCI_I2C_UCTXIFG0:             // Vector 24: TXIFG0
 		// we completed a transaction, check for the next cmd
 		IO::i2c.handleTxRxInt(1);
